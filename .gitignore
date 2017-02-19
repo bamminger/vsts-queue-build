@@ -1,0 +1,13 @@
+bower_components/
+node_modules/
+src/*.js
+
+# Custom extension manifest
+extension-*.json
+vss-extension.json
+
+# VSIX Packages (vset output)
+*.vsix
+
+#npm log
+npm-debug.log
