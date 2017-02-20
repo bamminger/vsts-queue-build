@@ -2,7 +2,7 @@ import vb = require('vso-node-api/BuildApi');
 import i = require('vso-node-api/interfaces/BuildInterfaces');
 
 
-const fiveMinutesTimeDifference: number = 300000;
+const outputTimeInterval: number = 150000; // 2,5 Min
 
 export class Worker {
 
@@ -30,11 +30,15 @@ export class Worker {
         let pathIndex = this.buildName.lastIndexOf('\\');
         let path = null;
         if (pathIndex > 0) {
-            path += this.buildName.substring(0, pathIndex);
+            path = this.buildName.substring(0, pathIndex);
             if (path.length > 0 && path[0] !== '\\') { // Make leading \ optional
                 path = '\\' + path;
             }
 
+            this.buildName = this.buildName.substring(pathIndex + 1, this.buildName.length); // Remove path from build name
+        }
+        else if (pathIndex == 0) { // Special case for leading \
+            path = '\\';
             this.buildName = this.buildName.substring(pathIndex + 1, this.buildName.length); // Remove path from build name
         }
         else {
@@ -60,7 +64,7 @@ export class Worker {
         build.definition.id = buildDefinition.id;
 
         this.buildQueueResult = await this.buildApi.queueBuild(build, this.teamProject, true);
-        console.log(`Build ${this.buildName} started - ${this.buildQueueResult.buildNumber}`);
+        console.log(`Build "${this.buildName}" started - ${this.buildQueueResult.buildNumber}`);
 
         this.lastOutputTime = new Date().getTime();
     }
@@ -73,7 +77,7 @@ export class Worker {
         // Check build status
         if ((await this.buildApi.getBuild(this.buildQueueResult.id)).status === 2) // 2 = completed
         {
-            console.log(`Build ${this.buildName} started - ${this.buildQueueResult.buildNumber}`);
+            console.log(`Build "${this.buildName}" completed - ${this.buildQueueResult.buildNumber}`);
 
             this.cachedStatus = true;
             return true;
@@ -81,8 +85,8 @@ export class Worker {
 
         // Ensure output during running builds
         let currentTime = new Date().getTime();
-        if (currentTime - fiveMinutesTimeDifference > this.lastOutputTime) {
-            console.log(`Build ${this.buildName} is running - ${this.buildQueueResult.buildNumber}`);
+        if (currentTime - outputTimeInterval > this.lastOutputTime) {
+            console.log(`Build "${this.buildName}" is running - ${this.buildQueueResult.buildNumber}`);
             this.lastOutputTime = currentTime;
         }
 
