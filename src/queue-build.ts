@@ -37,13 +37,20 @@ async function run() {
         // Start builds
         let buildsToStart = tl.getDelimitedInput('buildDefinitionName', '\n', true);
         if (debug) {
-            console.log(`Builds to start (plain) ${tl.getInput('buildDefinitionName', true)}`);
+            console.log(`Build(s) to start (plain) ${tl.getInput('buildDefinitionName', true)}`);
         }
 
         for (let i = 0; i < buildsToStart.length; i++) {
             let worker = new w.Worker(buildsToStart[i], currentTeamProject, buildApi, debug);
             builds.push(worker);
             await worker.queueBuild();
+        }
+
+
+        let async: boolean = tl.getBoolInput('async', false);
+        if (async === true) {
+            tl.setResult(tl.TaskResult.Succeeded, `Build(s) queued (async).`);
+            return;
         }
 
         // Poll build result
@@ -61,12 +68,12 @@ async function run() {
         }
 
         // Finish task
-        tl.setResult(tl.TaskResult.Succeeded, `Queue build finished successfully`);
+        tl.setResult(tl.TaskResult.Succeeded, `Queue build(s) finished successfully`);
 
     }
     catch (error) {
         console.log(error);
-        tl.setResult(tl.TaskResult.Failed, `Queue build faild`);
+        tl.setResult(tl.TaskResult.Failed, `Queue build(s) faild`);
     }
 }
 

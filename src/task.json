@@ -1,17 +1,17 @@
 {
     "id": "025bc3d2-c942-42d2-9b76-97db7e884483",
     "name": "queue-build",
-    "friendlyName": "Queue Build",
-    "description": "Start a new Build in your Team Project",
+    "friendlyName": "Queue Build(s)",
+    "description": "Start new build(s) in your Team Project",
     "helpMarkDown": "",
     "category": "Utility",
     "author": "jochenbamminger",
     "version": {
         "Major": 0,
-        "Minor": 1,
-        "Patch": 32
+        "Minor": 2,
+        "Patch": 0
     },
-    "instanceNameFormat": "Queue build $(buildDefinitionName)",
+    "instanceNameFormat": "Queue build(s) $(buildDefinitionName)",
     "groups": [
         {
             "name": "advanced",
@@ -26,7 +26,15 @@
             "label": "Build Definition Name",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The name of your build definition. Multiple definitions are separated by a new line."
+            "helpMarkDown": "The path to your build definitions. Multiple definitions are separated by a new line. For further instructions check the extension page."
+        },
+        {
+            "name": "async",
+            "type": "boolean",
+            "label": "Async",
+            "defaultValue": false,
+            "required": true,
+            "helpMarkDown": "The async flag defines whether the build task waits till the builds are finished or just queues them."
         },
         {
             "name": "debug",
@@ -34,7 +42,7 @@
             "label": "Debug",
             "defaultValue": false,
             "required": true,
-            "helpMarkDown": "Enables debug mode.",
+            "helpMarkDown": "Enable debug mode. Additional information about your build definitions and the processed input will be provided.",
             "groupName": "advanced"
         }
     ],
