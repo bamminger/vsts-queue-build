@@ -11,20 +11,21 @@ The path to your build definitions.
 * Single build
 
     A build definition is simply queued by its name.
-    > Build 01
+        > Build 01
 
 * Multiple builds
 
     Multiple definitions are separated by a new line.
-    > Build 01
-    > Build02
+    
+        > Build 01
+        > Build02
 
 * Subfolders
 
     Folders are separated by a backslash. The starting backslash is optional. Subfolder can also be used for single builds.
-    > \subfolder\sub-sub folder\Build 01
-    > \Build02
-    > \another_folder\Build 03
+        > \subfolder\sub-sub folder\Build 01
+        > \Build02
+        > \another_folder\Build 03
 
 
 **Async**
