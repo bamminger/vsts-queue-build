@@ -30,4 +30,5 @@ The async flag defines whether the build task waits till the builds are finished
 Enables the debug mode. Additional information about your build definitions and the processed input will be provided.
 
 # Further information
-If you need some special kind of setting or a new feature for this extension, don't hesitate to create a github issue or leave your comments below.
+If you need some special kind of setting or a new feature for this extension, don't hesitate to create a github issue or leave a comment at the vsts extension page.
+https://marketplace.visualstudio.com/items?itemName=jb.queue-build (coming soon)
