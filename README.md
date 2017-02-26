@@ -7,6 +7,7 @@ By the use of the async setting the task is also able to wait for all builds to 
 # Configuration
 
 **Build Definition Name**
+
 The path to your build definitions.
 
 * Single build
