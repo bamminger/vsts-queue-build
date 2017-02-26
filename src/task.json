@@ -5,11 +5,11 @@
     "description": "Start new build(s) in your Team Project",
     "helpMarkDown": "",
     "category": "Utility",
-    "author": "jochenbamminger",
+    "author": "jb",
     "version": {
-        "Major": 0,
-        "Minor": 2,
-        "Patch": 1
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
     },
     "instanceNameFormat": "Queue build(s) $(buildDefinitionName)",
     "groups": [
