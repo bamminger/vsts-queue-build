@@ -24,7 +24,7 @@ Multiple definitions are separated by a new line.
 
 * Subfolders
 
-Folders are separated by a backslash. The starting backslash is optional. Subfolder can also be used for single builds.
+Folders are separated by a backslash. The starting backslash is optional. Subfolders can also be used for single builds.
 
 ![Subfolders configuration](doc/images/config_build_definition_03.png "Subfolders configuration")
 

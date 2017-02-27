@@ -1,33 +1,36 @@
-import tl = require('vsts-task-lib/task');
-import vm = require('vso-node-api/WebApi');
-import w = require('./worker');
+import {
+    getVariable, getEndpointAuthorization,
+    getInput, getBoolInput, getDelimitedInput,
+    TaskResult, setResult
+} from 'vsts-task-lib/task';
+import { WebApi, getPersonalAccessTokenHandler } from 'vso-node-api/WebApi';
+import { Worker } from './worker';
 
-function sleep(ms) {
+function sleep(ms): Promise<{}> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function run() {
 
-    let debug: boolean = tl.getBoolInput('debug', true);
-    var builds = new Array<w.Worker>();
+    let debug: boolean = getBoolInput('debug', true);
+    var builds = new Array<Worker>();
 
     try {
 
-        // Get oAuthToken
-        let teamFoundationUri = tl.getVariable('system.teamFoundationCollectionUri');
+        // Get auth token
+        let teamFoundationUri = getVariable('system.teamFoundationCollectionUri');
 
-        let auth = tl.getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
+        let auth = getEndpointAuthorization('SYSTEMVSSCONNECTION', false);
         let token = auth.parameters['AccessToken'];
-        let creds = vm.getPersonalAccessTokenHandler(token);
-        let connection = new vm.WebApi(teamFoundationUri, creds);
+        let creds = getPersonalAccessTokenHandler(token);
+        let connection = new WebApi(teamFoundationUri, creds);
 
         if (debug) {
             console.log(`TFS uri: ${teamFoundationUri}`);
-            // console.log(`Token: ${token}`);
         }
 
         // Get api connection parameters
-        let currentTeamProject = tl.getVariable('system.teamProject');
+        let currentTeamProject = getVariable('system.teamProject');
 
         let buildApi = connection.getBuildApi();
         if (debug) {
@@ -35,29 +38,28 @@ async function run() {
         }
 
         // Start builds
-        let buildsToStart = tl.getDelimitedInput('buildDefinitionName', '\n', true);
+        let buildsToStart = getDelimitedInput('buildDefinitionName', '\n', true);
         if (debug) {
-            console.log(`Build(s) to start (plain) ${tl.getInput('buildDefinitionName', true)}`);
+            console.log(`Build(s) to start (plain) ${getInput('buildDefinitionName', true)}`);
         }
 
         for (let i = 0; i < buildsToStart.length; i++) {
-            let worker = new w.Worker(buildsToStart[i], currentTeamProject, buildApi, debug);
+            let worker = new Worker(buildsToStart[i], currentTeamProject, buildApi, debug);
             builds.push(worker);
             await worker.queueBuild();
         }
 
-
-        let async: boolean = tl.getBoolInput('async', false);
+        // Complete task if async is true
+        let async: boolean = getBoolInput('async', false);
         if (async === true) {
-            tl.setResult(tl.TaskResult.Succeeded, `Build(s) queued (async).`);
+            setResult(TaskResult.Succeeded, `Build(s) queued (async).`);
             return;
         }
 
         // Poll build result
-        let hasUnfinishedTasks = true;
-        while (hasUnfinishedTasks) {
+        let hasUnfinishedTasks;
+        do {
             await sleep(1000);
-
             hasUnfinishedTasks = false;
 
             for (let i = 0; i < builds.length; i++) {
@@ -65,15 +67,15 @@ async function run() {
                     hasUnfinishedTasks = true;
                 }
             }
-        }
+        } while (hasUnfinishedTasks);
 
         // Finish task
-        tl.setResult(tl.TaskResult.Succeeded, `Queue build(s) finished successfully`);
+        setResult(TaskResult.Succeeded, `Queue build(s) finished successfully`);
 
     }
     catch (error) {
-        console.log(error);
-        tl.setResult(tl.TaskResult.Failed, `Queue build(s) faild`);
+        console.error(error);
+        setResult(TaskResult.Failed, `Queue build(s) faild`);
     }
 }
 

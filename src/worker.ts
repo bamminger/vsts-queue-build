@@ -1,19 +1,18 @@
-import vb = require('vso-node-api/BuildApi');
-import i = require('vso-node-api/interfaces/BuildInterfaces');
+import { IBuildApi } from 'vso-node-api/BuildApi';
+import { Build, BuildStatus } from 'vso-node-api/interfaces/BuildInterfaces';
 
-
-const outputTimeInterval: number = 150000; // 2,5 Min
+const outputTimeInterval: number = 150000; // 2.5 Minutes
 
 export class Worker {
 
-    protected buildQueueResult: i.Build;
+    protected buildQueueResult: Build;
     protected cachedStatus: boolean;
     protected lastOutputTime: number;
 
     constructor(
         protected buildName: string,
         protected teamProject: string,
-        protected buildApi: vb.IBuildApi,
+        protected buildApi: IBuildApi,
         protected debug: boolean
     ) {
     }
@@ -28,23 +27,18 @@ export class Worker {
 
         // Process build path
         let pathIndex = this.buildName.lastIndexOf('\\');
-        let path = null;
-        if (pathIndex > 0) {
+        let path =  '\\'; // default value;
+        if (pathIndex >= 0) {
             path = this.buildName.substring(0, pathIndex);
-            if (path.length > 0 && path[0] !== '\\') { // Make leading \ optional
+            if (path.length == 0) { // Special case for leading \ without subfolder
+                path = '\\';
+            }
+            else if (path[0] !== '\\') { // Make leading \ optional
                 path = '\\' + path;
             }
 
             this.buildName = this.buildName.substring(pathIndex + 1, this.buildName.length); // Remove path from build name
         }
-        else if (pathIndex == 0) { // Special case for leading \
-            path = '\\';
-            this.buildName = this.buildName.substring(pathIndex + 1, this.buildName.length); // Remove path from build name
-        }
-        else {
-            path = '\\'; // default value;
-        }
-
 
         if (this.debug) {
             console.log(`Path: ${path}, Build name: ${this.buildName}`);
@@ -60,7 +54,7 @@ export class Worker {
         }
 
         // Queue build 
-        let build: i.Build = <i.Build>{ definition: { id: 0 } };
+        let build: Build = <Build>{ definition: { id: 0 } };
         build.definition.id = buildDefinition.id;
 
         this.buildQueueResult = await this.buildApi.queueBuild(build, this.teamProject, true);
@@ -70,13 +64,13 @@ export class Worker {
     }
 
     public async getCompletedStatus(): Promise<boolean> {
+        // Avoid status check for already completed tasks
         if (this.cachedStatus === true) {
             return this.cachedStatus;
         }
 
         // Check build status
-        if ((await this.buildApi.getBuild(this.buildQueueResult.id)).status === 2) // 2 = completed
-        {
+        if ((await this.buildApi.getBuild(this.buildQueueResult.id)).status === BuildStatus.Completed) {
             console.log(`Build "${this.buildName}" completed - ${this.buildQueueResult.buildNumber}`);
 
             this.cachedStatus = true;
