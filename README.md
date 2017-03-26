@@ -29,6 +29,49 @@ Folders are separated by a backslash. The starting backslash is optional. Subfol
 ![Subfolders configuration](doc/images/config_build_definition_03.png "Subfolders configuration")
 
 
+
+**Build configuration**
+
+The following settings can be configured per build:
+
+![Build configuration](doc/images/config_build_definition_04.png "Build configuration")
+
+
+*Syntax (global)*:
+```json
+{
+    "sourceBranch": "value",
+    "sourceVersion": "value",
+    "parameters": {
+        "parameterName": "value"
+    }
+}
+```
+
+*Syntax (per build)*:
+
+The default configuration will be used for all unspecified builds.
+All other builds will be associated by their build name or path + buildname.
+```json
+{
+    "default": {
+        "sourceBranch": "value",
+        "sourceVersion": "value",
+        "parameters": {
+            "parameterName": "value"
+        }
+    },
+    "BUILDNAME": {
+        "sourceBranch": "value",
+        "sourceVersion": "value",
+        "parameters": {
+            "parameter": "value"
+        }
+    }
+}
+```
+
+
 **Async**
 
 The async flag defines whether the build task waits till the builds are finished or just queues them.
@@ -42,5 +85,6 @@ Enables the debug mode. Additional information about your build definitions and 
 ![Debug configuration](doc/images/config_debug.png "Debug configuration")
 
 # Further information
+
 If you need some special kind of setting or a new feature for this extension, don't hesitate to create a github issue or leave a comment at the vsts extension page.
 https://marketplace.visualstudio.com/items?itemName=jb.queue-build

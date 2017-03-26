@@ -29,6 +29,14 @@
             "helpMarkDown": "The path to your build definitions. Multiple definitions are separated by a new line. For further instructions check the extension page."
         },
         {
+            "name": "buildConfiguration",
+            "type": "multiLine",
+            "label": "Build Configuration",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Specify queue build parameters. Example: { \"sourceBranch\": null, \"sourceVersion\": null, \"parameters\": { \"system.debug\": true } }. Further information: https://marketplace.visualstudio.com/items?itemName=jb.queue-build",
+        },
+        {
             "name": "async",
             "type": "boolean",
             "label": "Async",
@@ -48,7 +56,7 @@
     ],
     "execution": {
         "Node": {
-            "target": "queue-build.js"
+            "target": "task/queue-build.task.js"
         }
     }
 }

@@ -1,24 +1,26 @@
 {
-    "name": "vsts-queue-build-task",
-    "version": "1.0.0",
-    "description": "",
-    "scripts": {
-        "install": "cd src && npm install",
-        "build": "tsc -p ./src",
-        "postbuild": "npm run package",
-        "package": "tfx extension create --manifest-globs vss-extension.json"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/bamminger/vsts-queue-build"
-    },
-    "devDependencies": {
-        "tfx-cli": "^0.3.40",
-        "typescript": "^2.1.5",
-        "@types/node": "7.0.5"
-    },
-    "dependencies": {
-        "vsts-task-lib": "^2.0.0-preview",
-        "vso-node-api": "5.1.2"
-    }
+  "name": "vsts-queue-build-task",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "install": "cd src && npm install",
+    "build": "tsc -p ./src",
+    "postbuild": "npm run package",
+    "package": "tfx extension create --manifest-globs vss-extension.json",
+    "test": "tsc -p ./src && mocha src/test/test-suite.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bamminger/vsts-queue-build"
+  },
+  "devDependencies": {
+    "@types/mocha": "^2.2.40",
+    "mocha": "^3.2.0",
+    "tfx-cli": "^0.3.49",
+    "typescript": "^2.2.1"
+  },
+  "dependencies": {
+    "vsts-task-lib": "^2.0.2-preview",
+    "vso-node-api": "^5.1.2"
+  }
 }
