@@ -1,15 +1,16 @@
 import { IBuildConfiguration } from './interface';
+import { Build } from 'vso-node-api/interfaces/BuildInterfaces';
 
 export class BuildConfiguration implements IBuildConfiguration {
 
     path: string;
     buildName: string;
-    teamProject2: string;
+    configuration: Build;
 
     constructor(
-        buildName: string
+        public originalBuildName: string
     ) {
-        this.transformBuildName(buildName);
+        this.transformBuildName(originalBuildName);
     }
 
     /**

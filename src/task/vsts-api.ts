@@ -1,7 +1,7 @@
 import { getInput, getDelimitedInput } from 'vsts-task-lib/task';
 import { WebApi, getPersonalAccessTokenHandler } from 'vso-node-api/WebApi';
 import { IBuildApi } from 'vso-node-api/BuildApi';
-import { IEnvironmentConfiguration, IBuildConfiguration, BuildConfiguration } from './configuration';
+import { IEnvironmentConfiguration, IBuildConfiguration, BuildConfiguration, BuildConfigurationParser } from './configuration';
 
 export class VstsApi {
 
@@ -11,6 +11,18 @@ export class VstsApi {
 
     public getBuildConfigurations(): IBuildConfiguration[] {
 
+        // Process build configuration
+        let buildConfigurationInput = getInput('buildConfiguration', false);
+        if (this.configuration.debug) {
+            console.log(`Build configuration ${buildConfigurationInput}`);
+        }
+        let configParser = new BuildConfigurationParser();
+        configParser.fill(buildConfigurationInput);
+        if (this.configuration.debug) {
+            console.log(`Build configuration parsed: ${configParser.toString()}`);
+        }
+
+        // Process build definition names
         let buildsToStart = getDelimitedInput('buildDefinitionName', '\n', true);
         if (this.configuration.debug) {
             console.log(`Build(s) to start (plain) ${getInput('buildDefinitionName', true)}`);
@@ -18,7 +30,9 @@ export class VstsApi {
 
         let buildConfigurations = new Array<IBuildConfiguration>();
         for (let i = 0; i < buildsToStart.length; i++) {
-            buildConfigurations.push(new BuildConfiguration(buildsToStart[i]));
+            let buildConfig = new BuildConfiguration(buildsToStart[i]);
+            buildConfig.configuration = configParser.getBuildConfiguration(buildConfig);
+            buildConfigurations.push(buildConfig);
         }
 
         return buildConfigurations;
