@@ -1,6 +1,7 @@
 bower_components/
 node_modules/
-src/*.js
+src/**/*.js
+src/**/*.js.map
 
 # Custom extension manifest
 extension-*.json
@@ -11,3 +12,6 @@ vss-extension.json
 
 #npm log
 npm-debug.log
+
+.taskkey
+.vscode

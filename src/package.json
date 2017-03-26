@@ -2,16 +2,14 @@
     "name": "vsts-queue-build-task",
     "version": "1.0.0",
     "description": "",
-    "scripts": {
-    },
+    "scripts": {},
     "repository": {
         "type": "git",
         "url": "https://github.com/bamminger/vsts-queue-build"
     },
-    "devDependencies": {
-    },
+    "devDependencies": {},
     "dependencies": {
-        "vsts-task-lib": "^2.0.0-preview",
-        "vso-node-api": "5.1.2"
+        "vsts-task-lib": "^2.0.2-preview",
+        "vso-node-api": "^5.1.2"
     }
 }
