@@ -4,6 +4,8 @@ By the use of the async setting the task is also able to wait for all builds to 
 
 ![Single build configuration](doc/images/task_overview.png "Single build configuration")
 
+<br />
+
 # Configuration
 
 **Build Definition Name**
@@ -28,11 +30,11 @@ Folders are separated by a backslash. The starting backslash is optional. Subfol
 
 ![Subfolders configuration](doc/images/config_build_definition_03.png "Subfolders configuration")
 
-
+---
 
 **Build configuration**
 
-The following settings can be configured per build:
+You can use the configuration field to configure the variables per build:
 
 ![Build configuration](doc/images/config_build_definition_04.png "Build configuration")
 
@@ -50,8 +52,8 @@ The following settings can be configured per build:
 
 *Syntax (per build)*:
 
-The default configuration will be used for all unspecified builds.
-All other builds will be associated by their build name or path + buildname.
+The "default" configuration will be used for all unspecified builds.
+All the other builds will be associated by their build name or path + buildname.
 ```json
 {
     "default": {
@@ -70,7 +72,7 @@ All other builds will be associated by their build name or path + buildname.
     }
 }
 ```
-
+---
 
 **Async**
 
@@ -78,11 +80,15 @@ The async flag defines whether the build task waits till the builds are finished
 
 ![Async configuration](doc/images/config_async.png "Async configuration")
 
+---
+
 **Debug**
 
 Enables the debug mode. Additional information about your build definitions and the processed input will be provided.
 
 ![Debug configuration](doc/images/config_debug.png "Debug configuration")
+
+<br />
 
 # Further information
 
