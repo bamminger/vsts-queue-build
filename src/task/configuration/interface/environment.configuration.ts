@@ -4,6 +4,7 @@ export interface IEnvironmentConfiguration {
     accessToken: string;
     teamProject: string;
     teamFoundationUri: string;
+    requestedFor: string;
     
     async: boolean;
 

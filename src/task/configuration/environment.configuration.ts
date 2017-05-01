@@ -7,6 +7,7 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
     accessToken: string;
     teamProject: string;
     teamFoundationUri: string;
+    requestedFor: string | null;
 
     async: boolean;
 
@@ -15,6 +16,7 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
         this.accessToken = this.getAccessToken();
         this.teamProject = this.getTeamProject();
         this.teamFoundationUri = this.getTeamFoundationUri();
+        this.requestedFor = this.getRequestedFor();
 
         this.async = this.getAsync();
     }
@@ -24,6 +26,16 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
      */
     private getAsync(): boolean {
         return getBoolInput('async', false);
+    }
+
+    /**
+     * Get requestedFor
+     */
+    private getRequestedFor(): string {
+        if (getBoolInput('requestedFor', false)) {
+            return getVariable('build.requestedForId');
+        }
+        return null;
     }
 
     /**

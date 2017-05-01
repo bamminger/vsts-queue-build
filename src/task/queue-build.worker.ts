@@ -1,5 +1,6 @@
 import { IBuildApi } from 'vso-node-api/BuildApi';
 import { Build, BuildStatus, BuildResult, DefinitionReference } from 'vso-node-api/interfaces/BuildInterfaces';
+import { IdentityRef } from 'vso-node-api/interfaces/common/VSSInterfaces';
 import { IEnvironmentConfiguration, IBuildConfiguration } from './configuration';
 
 const outputTimeInterval: number = 150000; // 2.5 Minutes
@@ -53,11 +54,19 @@ export class BuildWorker {
         // Set build id
         build.definition.id = buildDefinition.id;
 
+        // Set optional requested for
+        if (this.environmentConfiguration.requestedFor != null) {
+            if (build.requestedFor == null) {
+                build.requestedFor = <any>{ id: '' };
+            }
+            build.requestedFor.id = this.environmentConfiguration.requestedFor;
+        }
+
         // Transform build parameters from object to string
         if (build.parameters != null && typeof build.parameters != "string") {
             build.parameters = JSON.stringify(build.parameters);
-        }
-
+        }     
+        
         if (this.environmentConfiguration.debug) {
             console.log(`Queue request parameters for build "${this.buildConfiguration.buildName}": ${JSON.stringify(build)}`);
         }
