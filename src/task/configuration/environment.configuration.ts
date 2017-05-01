@@ -1,4 +1,4 @@
-import { getVariable, getEndpointAuthorization, getBoolInput } from 'vsts-task-lib/task';
+import { getInput, getVariable, getEndpointAuthorization, getBoolInput } from 'vsts-task-lib/task';
 import { IEnvironmentConfiguration } from './interface';
 
 export class EnvironmentConfiguration implements IEnvironmentConfiguration {
@@ -49,9 +49,15 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
      * Get auth token from environment variables
      */
     private getAccessToken(): string {
+        let customAuthToken = getInput('authToken', false);
+
+        if (customAuthToken != null && customAuthToken.trim() != '') {
+            return customAuthToken;
+        }
+
         let auth = getEndpointAuthorization('SYSTEMVSSCONNECTION', true);
         if (auth == null) {
-            return getVariable("queue_accesstoken"); // Special case for test szenario
+            return getVariable("system.accessToken");
         }
         return auth.parameters['AccessToken'];
     }
