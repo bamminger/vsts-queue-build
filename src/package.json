@@ -1,6 +1,6 @@
 {
     "name": "vsts-queue-build-task",
-    "version": "1.0.0",
+    "version": "1.2.0",
     "description": "",
     "scripts": {},
     "repository": {
@@ -9,7 +9,7 @@
     },
     "devDependencies": {},
     "dependencies": {
-        "vsts-task-lib": "^2.0.2-preview",
-        "vso-node-api": "^5.1.2"
+        "vsts-task-lib": "2.0.5",
+        "vso-node-api": "5.1.2"
     }
 }
