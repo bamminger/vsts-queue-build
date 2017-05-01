@@ -9,5 +9,7 @@ tmr.setInput('debug', process.env['queue_build_debug']);
 tmr.setInput('async', process.env['queue_build_async']);
 tmr.setInput('buildDefinitionName', process.env['queue_build_definition']);
 tmr.setInput('buildConfiguration', process.env['queue_build_configuration']);
+tmr.setInput('buildConfigurationType', process.env['queue_build_configuration_type']);
+tmr.setInput('authToken', process.env['queue_build_auth_token']);
 
 tmr.run();

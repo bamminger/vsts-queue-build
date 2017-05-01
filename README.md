@@ -32,7 +32,7 @@ Folders are separated by a backslash. The starting backslash is optional. Subfol
 
 ---
 
-**Build configuration**
+**Configuration**
 
 You can use the configuration field to configure the variables per build:
 
@@ -80,6 +80,18 @@ Currently tested configuration settings:
 }
 ```
 
+**Configuration type**
+
+* JSON
+
+The content of the configuration field will be interpreted as JSON.
+
+* Single \ JSON
+
+Before the configuration content is interpreted as JSON, all backslash (\) occurrences are replaced by \\. This is necessary to process file paths (e.g. \\remote\folder).
+
+![Configuration type](doc/images/config_build_definition_06.png "Configuration type")
+
 ---
 
 **Async**
@@ -87,6 +99,21 @@ Currently tested configuration settings:
 The async flag defines whether the build task waits till the builds are finished or just queues them.
 
 ![Async configuration](doc/images/config_async.png "Async configuration")
+
+---
+
+**Authentication & Authorization**
+
+* Use Requestor User
+
+This setting controls whether the user who has triggered this build or release is used for triggering the new build or the default collection service account.
+
+* Auth Token
+
+This input field makes it possible to define a custom authentication token, if the default behavior of this task does not work.
+If this field is empty, the tasks tries to use the authentication token of the build agent or the system.accesstoken variable which can be enabled in the build settings.
+
+![Authentication configuration](doc/images/config_build_definition_05.png "Authentication configuration")
 
 ---
 

@@ -10,7 +10,7 @@ function sleep(ms): Promise<{}> {
 
 async function run() {
 
-    var builds = new Array<BuildWorker>();
+    let builds = new Array<BuildWorker>();
 
     try {
         // Get environment variables

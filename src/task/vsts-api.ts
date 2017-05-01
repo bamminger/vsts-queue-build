@@ -16,8 +16,11 @@ export class VstsApi {
         if (this.configuration.debug) {
             console.log(`Build configuration ${buildConfigurationInput}`);
         }
+
+        let configType = getInput('buildConfigurationType', true);
+
         let configParser = new BuildConfigurationParser();
-        configParser.fill(buildConfigurationInput);
+        configParser.fill(buildConfigurationInput, configType);
         if (this.configuration.debug) {
             console.log(`Build configuration parsed: ${configParser.toString()}`);
         }

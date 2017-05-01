@@ -42,7 +42,7 @@
             "helpMarkDown": "Specify the build configuration interpretation type. E.g.: Use JavaScript if you need to support a single backslash.",
             "options": {
                 "json": "JSON",
-                "javascript": "JavaScript"
+                "singleBackslashJson": "Single \\ JSON"
             }
         },
         {
@@ -64,7 +64,7 @@
         {
             "name": "requestedFor",
             "type": "boolean",
-            "label": "Use Requester User Id",
+            "label": "Use Requester User",
             "defaultValue": false,
             "required": true,
             "helpMarkDown": "Activate this checkbox to use the same requester user for the queue builds that was used for the current build/release.",
