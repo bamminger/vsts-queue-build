@@ -32,8 +32,14 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
      * Get requestedFor
      */
     private getRequestedFor(): string {
-        if (getBoolInput('requestedFor', false)) {
-            return getVariable('build.requestedForId');
+        if (getBoolInput('requestedFor', false) == true) {
+            // Check release variable first, because in a build definition it is not defined
+            // The build variable is definied within a release (requested for of the build artifact) and build queue.
+            let requestedForId = getVariable('release.requestedForId');
+            if (requestedForId == null || requestedForId == '') {
+                return getVariable('build.requestedForId');
+            }
+            return requestedForId;
         }
         return null;
     }

@@ -9,14 +9,14 @@
     "version": {
         "Major": 1,
         "Minor": 2,
-        "Patch": 0
+        "Patch": 1
     },
     "instanceNameFormat": "Queue build(s) $(buildDefinitionName)",
     "groups": [
         {
             "name": "auth",
             "displayName": "Authentication & Authorization",
-            "isExpanded": false
+            "isExpanded": true
         },
         {
             "name": "advanced",
