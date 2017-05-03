@@ -30,9 +30,9 @@ export class BuildConfigurationParser {
                 let groups = reg.exec(this.configurationInput);
                 for (let i = 0; i < groups.length; i++) {
                     // stringify string and replace \ to \\ + trim \" at the beginning
-                    let groupVal = JSON.stringify(groups[i]).substring(2).replace(/\\/g, '\\\\');
+                    let groupVal = JSON.stringify(groups[i]).substring(2);
                     // remove \\"" at the end
-                    groupVal = groupVal.substring(0, groupVal.length - 4) + '"';
+                    groupVal = groupVal.substring(0, groupVal.length - 3) + '"';
                     this.configurationInput = this.configurationInput.replace(groups[i], groupVal);
                 }
             }

@@ -86,9 +86,10 @@ Currently tested configuration settings:
 
 The content of the configuration field will be interpreted as JSON.
 
-* Single \ JSON
+* Single \\ JSON
 
-Before the configuration content is interpreted as JSON, all backslash (\) occurrences are replaced by \\. This is necessary to process file paths (e.g. \\remote\folder).
+Before the configuration content is interpreted as JSON, all backslash (\\) occurrences are replaced by \\\\. This is necessary to process file paths (e.g. \\\\remote\\folder).
+This will be the default setting in the next version.
 
 ![Configuration type](doc/images/config_build_definition_06.png "Configuration type")
 
@@ -129,3 +130,5 @@ Enables the debug mode. Additional information about your build definitions and 
 
 If you need some special kind of setting or a new feature for this extension, don't hesitate to create a github issue or leave a comment at the vsts extension page.
 https://marketplace.visualstudio.com/items?itemName=jb.queue-build
+
+Please leave a review in the visual studio marketplace. Thanks!
