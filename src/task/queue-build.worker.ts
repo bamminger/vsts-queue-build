@@ -32,9 +32,14 @@ export class BuildWorker {
         }
 
         // Find build definition
-        let buildDefinition = buildDefinitions.find(b => b.name === this.buildConfiguration.buildName && b.path == this.buildConfiguration.path);
+        let buildDefinition = buildDefinitions.find(b => b.name === this.buildConfiguration.buildName 
+                                                         && b.path == this.buildConfiguration.path);
         if (buildDefinition == null) {
-            throw new Error(`Build definition "${this.buildConfiguration.originalBuildName}" not found`);
+            buildDefinition = buildDefinitions.find(b => b.name.toLowerCase() === this.buildConfiguration.buildName.toLowerCase()
+                                                         && b.path.toLowerCase() == this.buildConfiguration.path.toLowerCase());
+            if (buildDefinition == null) {
+                throw new Error(`Build definition "${this.buildConfiguration.originalBuildName}" not found`);
+            }
         }
         if (this.environmentConfiguration.debug) {
             console.log(`Build definition id: ${buildDefinition.id}`);
@@ -65,8 +70,8 @@ export class BuildWorker {
         // Transform build parameters from object to string
         if (build.parameters != null && typeof build.parameters != "string") {
             build.parameters = JSON.stringify(build.parameters);
-        }     
-        
+        }
+
         if (this.environmentConfiguration.debug) {
             console.log(`Queue request parameters for build "${this.buildConfiguration.buildName}": ${JSON.stringify(build)}`);
         }

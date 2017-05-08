@@ -57,20 +57,32 @@ export class BuildConfigurationParser {
         }
         catch (e) {
             throw new Error("Build configuration input: " + this.configurationInput
-                 + "Build configuration error: " + e.message);
+                + "Build configuration error: " + e.message);
         }
+    }
+
+    private findByKey(keys: string[], searchValue: string) {
+        let key = keys.find(k => k === searchValue);
+        if (key != null) {
+            return key;
+        }
+
+        return keys.find(k => k.toLowerCase() === searchValue.toLowerCase());
     }
 
     public getBuildConfiguration(config: BuildConfiguration): Build {
         if (this.buildSpecificConfiguration != null) {
-            if (this.buildSpecificConfiguration[config.buildName]) {
-                return this.buildSpecificConfiguration[config.buildName];
+            let keys = Object.getOwnPropertyNames(this.buildSpecificConfiguration);
+            let key = null;
 
-            } else if (this.buildSpecificConfiguration[config.originalBuildName]) {
-                return this.buildSpecificConfiguration[config.originalBuildName];
+            if ((key = this.findByKey(keys, config.buildName)) != null) {
+                return this.buildSpecificConfiguration[key];
 
-            } else if (this.buildSpecificConfiguration[config.path + '\\' + config.buildName]) {
-                return this.buildSpecificConfiguration[config.path + '\\' + config.buildName];
+            } else if ((key = this.findByKey(keys, config.originalBuildName)) != null) {
+                return this.buildSpecificConfiguration[key];
+
+            } else if ((key = this.findByKey(keys, config.path + '\\' + config.buildName)) != null) {
+                return this.buildSpecificConfiguration[key];
             }
         }
 

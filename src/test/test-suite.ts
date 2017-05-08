@@ -65,6 +65,27 @@ it('definition with path', (done: MochaDone) => {
     done();
 });
 
+it('case insensitive definition with path', (done: MochaDone) => {
+
+    process.env['queue_build_async'] = 'true';
+    process.env['queue_build_definition'] = '\\build 01';
+    process.env['queue_build_configuration'] = `{
+    "bUild 01": {
+        "sourceBranch": null
+    }
+}`;
+
+    let tp = path.join(__dirname, 'runner.js');
+    let tr: MockTestRunner = new MockTestRunner(tp);
+
+    tr.run();
+    assert(tr.succeeded, 'should have succeeded');
+    assert(tr.stdout.indexOf(`Build "build 01" started`) >= 0, "build definition should be valid");
+    assert(tr.stdout.indexOf(`Queue request parameters for build "build 01": {"sourceBranch":null`) >= 0, "build parameters should be matched");
+
+    done();
+});
+
 });
 
 
