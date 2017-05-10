@@ -27,13 +27,16 @@ export class BuildConfigurationParser {
 
                 // Find all properties and replace \ through \\
                 let reg = new RegExp(/"([^"]*\\[^"]*)"/g);
-                let groups = reg.exec(this.configurationInput);
-                for (let i = 0; i < groups.length; i++) {
+
+                let groups;
+                while ((groups = reg.exec(this.configurationInput)) != null) {
+                    let value = groups[0];
                     // stringify string and replace \ to \\ + trim \" at the beginning
-                    let groupVal = JSON.stringify(groups[i]).substring(2);
+                    let groupVal = JSON.stringify(value).substring(2);
+
                     // remove \\"" at the end
                     groupVal = groupVal.substring(0, groupVal.length - 3) + '"';
-                    this.configurationInput = this.configurationInput.replace(groups[i], groupVal);
+                    this.configurationInput = this.configurationInput.replace(value, groupVal);
                 }
             }
 
