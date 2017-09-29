@@ -13,10 +13,24 @@ function sleep(ms): Promise<{}> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function linkBuildQueued(builds: Array<BuildWorker>) {
+	var filepath = path.join(tl.getVariable("Agent.BuildDirectory"),`buildList.md`);
+    var dataStr="";
+    console.log(`filepath: ${filepath}`);
+	for (let i = 0; i < builds.length; i++) {
+		let buildLink = builds[i].getBuildLink();
+	    if(buildLink != null && buildLink != `` ){
+			dataStr+= buildLink;
+		}
+    }
+	console.log(`dataStr: ${dataStr}`);
+    fs.writeFileSync(filepath,dataStr);
+    console.log("##vso[task.addattachment type=Distributedtask.Core.Summary;name=Original Builds;]"+filepath);
+}
+
 async function run() {
 
     let builds = new Array<BuildWorker>();
-
     try {
         // Get environment variables
         let configuration = new EnvironmentConfiguration();
@@ -38,9 +52,7 @@ async function run() {
             setResult(TaskResult.Succeeded, `Build(s) queued (async).`);
             return;
         }
-        var filepath = path.join(tl.getVariable("Agent.BuildDirectory"),`buildList.md`);
-        var dataStr="";
-        console.log(`filepath: ${filepath}`);
+
         // Poll build result
         let hasUnfinishedTasks;
         do {
@@ -52,17 +64,13 @@ async function run() {
                 }
             }
         } while (hasUnfinishedTasks);
-        for (let i = 0; i < builds.length; i++) {
-            dataStr+= builds[i].getBuildLink();
-        }
-        console.log(`dataStr: ${dataStr}`);
-        fs.writeFileSync(filepath,dataStr);
-        console.log("##vso[task.addattachment type=Distributedtask.Core.Summary;name=Original Builds;]"+filepath);
         // Finish task
+		linkBuildQueued(builds);
         setResult(TaskResult.Succeeded, `Queue build(s) finished successfully`);
 
     }
     catch (error) {
+        linkBuildQueued(builds);
         console.error(error);
         setResult(TaskResult.Failed, `Queue build(s) faild`);
     }

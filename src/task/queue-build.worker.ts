@@ -17,6 +17,7 @@ export class BuildWorker {
         protected environmentConfiguration: IEnvironmentConfiguration,
         protected buildApi: IBuildApi,
     ) {
+		this.buildLink = ``;
     }
 
     public async queueBuild(): Promise<void> {
@@ -91,14 +92,17 @@ export class BuildWorker {
 
         // Check build status
         let build = await this.buildApi.getBuild(this.buildQueueResult.id);
-        this.buildLink = `[Build ${build.definition.name}](${build._links.web.href})<br>\n`;
+        
         if (build.status === BuildStatus.Completed) {
             console.log(`Build "${this.buildConfiguration.buildName}" completed - ${this.buildQueueResult.buildNumber}`);
 
             // Abort task in case of a failed build
             if (build.result == BuildResult.Failed) {
+				this.buildLink = `<a style="color:red" href="${build._links.web.href}">Build ${build.definition.name}</a><br>\n`;
                 throw Error(`Build "${this.buildConfiguration.buildName}" failed`);
-            }
+            }else{
+				this.buildLink = `<a href="${build._links.web.href}">Build ${build.definition.name}</a><br>\n`;
+			}
 
             this.cachedStatus = true;
             return true;
