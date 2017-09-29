@@ -314,6 +314,18 @@ describe('Queue configuration type tests', function () {
             "system.debug": true,
             "testVariable": "\\remote\folder"
         }
+    },
+    "build 01": {
+        "parameters": {
+            "system.debug": true,
+            "testVariable": "\\remote\folder"
+        }
+    },
+    "build 03": {
+        "parameters": {
+            "system.debug": true,
+            "testVariable": "\\remote2\folder"
+        }
     }
 }`;
 
@@ -321,7 +333,7 @@ describe('Queue configuration type tests', function () {
         let tr: MockTestRunner = new MockTestRunner(tp);
 
         tr.run();
-        assert(tr.succeeded, 'should have succeeded' + tr.stderr);
+        assert(tr.succeeded, 'should have succeeded');
         done();
     });
 
