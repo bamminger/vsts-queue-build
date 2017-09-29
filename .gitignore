@@ -5,7 +5,6 @@ src/**/*.js.map
 
 # Custom extension manifest
 extension-*.json
-vss-extension.json
 
 # VSIX Packages (vset output)
 *.vsix

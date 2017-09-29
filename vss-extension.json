@@ -1,0 +1,75 @@
+{
+    "manifestVersion": 1,
+    "id": "queue-build",
+    "version": "1.2.4",
+    "name": "Queue Build(s) Task",
+    "description": "A build/release task that queues new build(s).",
+    "publisher": "jb",
+    "public": true,
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/bamminger/vsts-queue-build"
+    },
+    "icons": {
+        "default": "images/icon_128.png"
+    },
+    "tags": [
+        "Build",
+        "Release",
+        "Task"
+    ],
+    "scopes": [
+        "vso.build_execute"
+    ],
+    "categories": [
+        "Build and release"
+    ],
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "files": [
+        {
+            "path": "src/task",
+            "addressable": true
+        },
+        {
+            "path": "src/task.json",
+            "addressable": true
+        },
+        {
+            "path": "src/node_modules",
+            "addressable": true
+        },
+        {
+            "path": "doc",
+            "addressable": true
+        },
+        {
+            "path": "images/icon_32.png",
+            "addressable": true,
+            "packagePath": "src/icon.png"
+        }
+    ],  
+    "content": {
+        "details": {
+            "path": "doc/overview.md"
+        },
+        "license": {
+            "path": "doc/license-terms.md"
+        }
+    },
+    "contributions": [
+        {
+            "id": "queue-build-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "src"
+            }
+        }
+    ]
+}
