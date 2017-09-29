@@ -4,6 +4,11 @@ import { BuildWorker } from './queue-build.worker';
 import { VstsApi } from './vsts-api';
 import { EnvironmentConfiguration } from './configuration';
 
+
+import tl = require('vsts-task-lib/task');
+import path = require('path');
+import fs = require('fs');
+
 function sleep(ms): Promise<{}> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -33,20 +38,26 @@ async function run() {
             setResult(TaskResult.Succeeded, `Build(s) queued (async).`);
             return;
         }
-
+        var filepath = path.join(tl.getVariable("Agent.BuildDirectory"),`buildList.md`);
+        var dataStr="";
+        console.log(`filepath: ${filepath}`);
         // Poll build result
         let hasUnfinishedTasks;
         do {
             await sleep(1000);
             hasUnfinishedTasks = false;
-
             for (let i = 0; i < builds.length; i++) {
                 if (!(await builds[i].getCompletedStatus())) {
                     hasUnfinishedTasks = true;
                 }
             }
         } while (hasUnfinishedTasks);
-
+        for (let i = 0; i < builds.length; i++) {
+            dataStr+= builds[i].getBuildLink();
+        }
+        console.log(`dataStr: ${dataStr}`);
+        fs.writeFileSync(filepath,dataStr);
+        console.log("##vso[task.addattachment type=Distributedtask.Core.Summary;name=Original Builds;]"+filepath);
         // Finish task
         setResult(TaskResult.Succeeded, `Queue build(s) finished successfully`);
 

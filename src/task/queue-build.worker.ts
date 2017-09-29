@@ -10,6 +10,7 @@ export class BuildWorker {
     protected buildQueueResult: Build;
     protected cachedStatus: boolean;
     protected lastOutputTime: number;
+    protected buildLink: string;
 
     constructor(
         protected buildConfiguration: IBuildConfiguration,
@@ -90,6 +91,7 @@ export class BuildWorker {
 
         // Check build status
         let build = await this.buildApi.getBuild(this.buildQueueResult.id);
+        this.buildLink = `[Build ${build.definition.name}](${build._links.web.href})<br>\n`;
         if (build.status === BuildStatus.Completed) {
             console.log(`Build "${this.buildConfiguration.buildName}" completed - ${this.buildQueueResult.buildNumber}`);
 
@@ -110,5 +112,9 @@ export class BuildWorker {
         }
 
         return false;
+    }
+
+    public getBuildLink(): string {
+        return this.buildLink;
     }
 }
