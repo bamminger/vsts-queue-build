@@ -15,7 +15,10 @@ function sleep(ms): Promise<{}> {
 
 function linkBuildQueued(builds: Array<BuildWorker>) {
 	var filepath = path.join(tl.getVariable("Agent.BuildDirectory"),`buildList.md`);
-    var dataStr="";
+    if (fs.existsSync(filepath)) {
+		fs.unlinkSync(filepath);
+	}
+	var dataStr="";
     //console.log(`filepath: ${filepath}`);
 	for (let i = 0; i < builds.length; i++) {
 		let buildLink = builds[i].getBuildLink();
@@ -26,6 +29,7 @@ function linkBuildQueued(builds: Array<BuildWorker>) {
 	//console.log(`dataStr: ${dataStr}`);
     fs.writeFileSync(filepath,dataStr);
     console.log("##vso[task.addattachment type=Distributedtask.Core.Summary;name=Original Builds;]"+filepath);
+	
 }
 
 async function run() {
