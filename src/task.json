@@ -37,7 +37,7 @@
             "name": "buildConfigurationType",
             "type": "radio",
             "label": "Configuration type",
-            "defaultValue": "json",
+            "defaultValue": "singleBackslashJson",
             "required": false,
             "helpMarkDown": "Specify the build configuration interpretation type. E.g.: Use JavaScript if you need to support a single backslash.",
             "options": {

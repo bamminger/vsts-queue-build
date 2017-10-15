@@ -1,11 +1,9 @@
-import { TaskResult, setResult } from 'vsts-task-lib/task';
+import { TaskResult, setResult, getVariable } from 'vsts-task-lib/task';
 import { WebApi, getPersonalAccessTokenHandler } from 'vso-node-api/WebApi';
 import { BuildWorker } from './queue-build.worker';
 import { VstsApi } from './vsts-api';
 import { EnvironmentConfiguration } from './configuration';
 
-
-import tl = require('vsts-task-lib/task');
 import path = require('path');
 import fs = require('fs');
 
@@ -14,22 +12,19 @@ function sleep(ms): Promise<{}> {
 }
 
 function linkBuildQueued(builds: Array<BuildWorker>) {
-	var filepath = path.join(tl.getVariable("Agent.BuildDirectory"),`buildList.md`);
+    var filepath = path.join(getVariable("Agent.BuildDirectory"), `buildList.md`);
     if (fs.existsSync(filepath)) {
-		fs.unlinkSync(filepath);
-	}
-	var dataStr="";
-    //console.log(`filepath: ${filepath}`);
-	for (let i = 0; i < builds.length; i++) {
-		let buildLink = builds[i].getBuildLink();
-	    if(buildLink != null && buildLink != `` ){
-			dataStr+= buildLink;
-		}
+        fs.unlinkSync(filepath);
     }
-	//console.log(`dataStr: ${dataStr}`);
-    fs.writeFileSync(filepath,dataStr);
-    console.log("##vso[task.addattachment type=Distributedtask.Core.Summary;name=Original Builds;]"+filepath);
-	
+    var dataStr = "";
+    for (let i = 0; i < builds.length; i++) {
+        let buildLink = builds[i].getBuildLink();
+        if (buildLink != null && buildLink != ``) {
+            dataStr += buildLink;
+        }
+    }
+    fs.writeFileSync(filepath, dataStr);
+    console.log("##vso[task.addattachment type=Distributedtask.Core.Summary;name=Original Builds;]" + filepath);
 }
 
 async function run() {
@@ -56,8 +51,9 @@ async function run() {
             setResult(TaskResult.Succeeded, `Build(s) queued (async).`);
             return;
         }
-        //
+        
         let isBuildSuccessed = true;
+
         // Poll build result
         let hasUnfinishedTasks;
         do {
@@ -66,18 +62,19 @@ async function run() {
             for (let i = 0; i < builds.length; i++) {
                 if (!(await builds[i].getCompletedStatus())) {
                     hasUnfinishedTasks = true;
-                }else if(!builds[i].getBuildResult()){
+                } else if (!builds[i].getBuildResult()) {
                     isBuildSuccessed = false;
                 }
             }
         } while (hasUnfinishedTasks);
+
         // Finish task
-		linkBuildQueued(builds);
-		if(isBuildSuccessed){
-			setResult(TaskResult.Succeeded, `Queue build(s) finished successfully`);		
-		}else{
-			setResult(TaskResult.Failed, `Queue build(s) faild`);
-		}
+        linkBuildQueued(builds);
+        if (isBuildSuccessed) {
+            setResult(TaskResult.Succeeded, `Queue build(s) finished successfully`);
+        } else {
+            setResult(TaskResult.Failed, `Queue build(s) faild`);
+        }
 
     }
     catch (error) {

@@ -24,13 +24,10 @@
     "categories": [
         "Build and release"
     ],
-    "targets": [
-        {
-            "id": "Microsoft.VisualStudio.Services"
-        }
-    ],
-    "files": [
-        {
+    "targets": [{
+        "id": "Microsoft.VisualStudio.Services"
+    }],
+    "files": [{
             "path": "src/task",
             "addressable": true
         },
@@ -51,7 +48,7 @@
             "addressable": true,
             "packagePath": "src/icon.png"
         }
-    ],  
+    ],
     "content": {
         "details": {
             "path": "doc/overview.md"
@@ -60,16 +57,17 @@
             "path": "doc/license-terms.md"
         }
     },
-    "contributions": [
-        {
-            "id": "queue-build-task",
-            "type": "ms.vss-distributed-task.task",
-            "targets": [
-                "ms.vss-distributed-task.tasks"
-            ],
-            "properties": {
-                "name": "src"
-            }
+    "contributions": [{
+        "id": "queue-build-task",
+        "type": "ms.vss-distributed-task.task",
+        "targets": [
+            "ms.vss-distributed-task.tasks"
+        ],
+        "properties": {
+            "name": "src"
         }
-    ]
+    }],
+    "galleryProperties": [{
+        "markdownItParser": "true"
+    }]
 }

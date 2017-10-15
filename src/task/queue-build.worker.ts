@@ -10,16 +10,17 @@ export class BuildWorker {
     protected buildQueueResult: Build;
     protected cachedStatus: boolean;
     protected lastOutputTime: number;
+
     protected buildLink: string;
-	protected isBuildSuccessed: boolean;
+    protected isBuildSuccessed: boolean;
 
     constructor(
         protected buildConfiguration: IBuildConfiguration,
         protected environmentConfiguration: IEnvironmentConfiguration,
         protected buildApi: IBuildApi,
     ) {
-		this.buildLink = ``;
-		this.isBuildSuccessed = true;
+        this.buildLink = ``;
+        this.isBuildSuccessed = true;
     }
 
     public async queueBuild(): Promise<void> {
@@ -36,16 +37,17 @@ export class BuildWorker {
         }
 
         // Find build definition
-        let buildDefinition = buildDefinitions.find(b => b.name === this.buildConfiguration.buildName 
-                                                         && b.path == this.buildConfiguration.path);
+        let buildDefinition = buildDefinitions.find(b => b.name === this.buildConfiguration.buildName && b.path == this.buildConfiguration.path);
         if (buildDefinition == null) {
-            buildDefinition = buildDefinitions.find(b => b.name.toLowerCase() === this.buildConfiguration.buildName.toLowerCase()
-                                                         && b.path.toLowerCase() == this.buildConfiguration.path.toLowerCase());
+            buildDefinition = buildDefinitions
+                .find(b => b.name.toLowerCase() === this.buildConfiguration.buildName.toLowerCase()
+                    && b.path.toLowerCase() == this.buildConfiguration.path.toLowerCase());
+
             if (buildDefinition == null) {
                 console.log(`Build definition "${this.buildConfiguration.originalBuildName}" not found`);
-				this.cachedStatus = true;
-				this.isBuildSuccessed = false;
-				return;
+                this.cachedStatus = true;
+                this.isBuildSuccessed = false;
+                return;
             }
         }
         if (this.environmentConfiguration.debug) {
@@ -97,20 +99,20 @@ export class BuildWorker {
 
         // Check build status
         let build = await this.buildApi.getBuild(this.buildQueueResult.id);
-        
+
         if (build.status === BuildStatus.Completed) {
             console.log(`Build "${this.buildConfiguration.buildName}" completed - ${this.buildQueueResult.buildNumber}`);
 
-            if (build.result == BuildResult.Succeeded || build.result == BuildResult.PartiallySucceeded){
-				this.buildLink = `<a href="${build._links.web.href}">Build ${build.definition.name}</a><br>\n`;
-				console.log(`Build "${this.buildConfiguration.buildName}" succeeded`);
-			}
-            else
-			{
-				this.buildLink = `<a style="color:red" href="${build._links.web.href}">Build ${build.definition.name}</a><br>\n`;
-                console.log(`Build "${this.buildConfiguration.buildName}" failed`);
-				this.isBuildSuccessed = false;
+            if (build.result == BuildResult.Succeeded || build.result == BuildResult.PartiallySucceeded) {
+                this.buildLink = `<a href="${build._links.web.href}">Build ${build.definition.name}</a><br>\n`;
+                console.log(`Build "${this.buildConfiguration.buildName}" succeeded`);
             }
+            else {
+                this.buildLink = `<a style="color:red" href="${build._links.web.href}">Build ${build.definition.name}</a><br>\n`;
+                console.log(`Build "${this.buildConfiguration.buildName}" failed`);
+                this.isBuildSuccessed = false;
+            }
+            
             this.cachedStatus = true;
             return true;
         }
@@ -128,7 +130,8 @@ export class BuildWorker {
     public getBuildLink(): string {
         return this.buildLink;
     }
-	public getBuildResult(): boolean {
-		return this.isBuildSuccessed;
-	}
+
+    public getBuildResult(): boolean {
+        return this.isBuildSuccessed;
+    }
 }
