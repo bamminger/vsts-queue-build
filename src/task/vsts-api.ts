@@ -32,10 +32,14 @@ export class VstsApi {
         }
 
         let buildConfigurations = new Array<IBuildConfiguration>();
-        for (let i = 0; i < buildsToStart.length; i++) {
-            let buildConfig = new BuildConfiguration(buildsToStart[i]);
-            buildConfig.configuration = configParser.getBuildConfiguration(buildConfig);
-            buildConfigurations.push(buildConfig);
+		for (let i = 0; i < buildsToStart.length; i++) {
+			let buildName = buildsToStart[i];
+			// if build definition which start with "#", we will igrone it
+			if (!buildName.startsWith("#")){
+				let buildConfig = new BuildConfiguration(buildName);
+				buildConfig.configuration = configParser.getBuildConfiguration(buildConfig);
+				buildConfigurations.push(buildConfig);
+			}
         }
 
         return buildConfigurations;
