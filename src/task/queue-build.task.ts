@@ -12,7 +12,12 @@ function sleep(ms): Promise<{}> {
 }
 
 function linkBuildQueued(builds: Array<BuildWorker>) {
-    var filepath = path.join(getVariable("Agent.BuildDirectory"), `buildList.md`);
+    let buildDirectory = getVariable("Agent.BuildDirectory");
+    if(buildDirectory == null) {
+        return;
+    }
+
+    var filepath = path.join(buildDirectory, `buildList.md`);
     if (fs.existsSync(filepath)) {
         fs.unlinkSync(filepath);
     }
