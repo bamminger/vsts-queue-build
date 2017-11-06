@@ -12,4 +12,9 @@ tmr.setInput('buildConfiguration', process.env['queue_build_configuration']);
 tmr.setInput('buildConfigurationType', process.env['queue_build_configuration_type']);
 tmr.setInput('authToken', process.env['queue_build_auth_token']);
 
+var mockBuildApi = require('./mock-build-api');
+
+// Mock a specific module function called in task 
+tmr.registerMock('./build-api', mockBuildApi);
+
 tmr.run();

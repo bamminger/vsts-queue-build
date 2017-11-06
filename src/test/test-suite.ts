@@ -2,6 +2,8 @@ import * as path from 'path';
 import * as assert from 'assert';
 import { MockTestRunner } from 'vsts-task-lib/mock-test';
 
+const timeout: number = 100000;
+
 function initializeEnvironment(): void {
     process.env['SYSTEM_TEAMPROJECT'] = '';
     process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = '';
@@ -9,7 +11,7 @@ function initializeEnvironment(): void {
     process.env['queue_build_debug'] = 'true';
     process.env['queue_build_async'] = 'false';
     process.env['queue_build_configuration_type'] = 'json';
-    // process.env['queue_build_configuration'] = ``;
+    process.env['queue_build_configuration'] = '';
 }
 
 
@@ -17,7 +19,7 @@ function initializeEnvironment(): void {
  *  Single definition tests 
  */
 describe('Single queue build tests', function () {
-    this.timeout(10000);
+    this.timeout(timeout);
 
     before(initializeEnvironment);
 
@@ -93,7 +95,7 @@ describe('Single queue build tests', function () {
  *  Multiple definition tests 
  */
 describe('Queue multiple builds tests', function () {
-    this.timeout(10000);
+    this.timeout(timeout);
 
     before(initializeEnvironment);
 
@@ -108,7 +110,7 @@ describe('Queue multiple builds tests', function () {
         tr.run();
         assert(tr.failed, 'should have failed');
         assert(tr.stderr.indexOf('Build definition "\\fail" not found') >= 0, "build definition should be invalid");
-        assert(tr.stderr.indexOf('Build definition "\\fail2" not found') == -1, "build should abort after first error");
+        assert(tr.stderr.indexOf('Build definition "\\fail2" not found') >= 0, "build should not abort after first error");
 
         done();
     });
@@ -157,7 +159,7 @@ test\\Build 02`;
  *  Multiple definition tests 
  */
 describe('Queue builds with configuration tests', function () {
-    this.timeout(10000);
+    this.timeout(timeout);
 
     before(initializeEnvironment);
 
@@ -299,7 +301,7 @@ sourceVersion: null,
  *  Configuration type tests 
  */
 describe('Queue configuration type tests', function () {
-    this.timeout(10000);
+    this.timeout(timeout);
 
     before(initializeEnvironment);
 
@@ -357,6 +359,37 @@ describe('Queue configuration type tests', function () {
         tr.run();
         assert(tr.failed, 'should have failed');
         assert(tr.stderr.indexOf('Unexpected token') >= 0, "output should contain a detailed error information");
+
+        done();
+    });
+
+});
+
+
+/*
+ *  Comment tests 
+ */
+describe('Comment queue build tests', function () {
+    this.timeout(timeout);
+
+    before(initializeEnvironment);
+
+    it('valid definition with comment', (done: MochaDone) => {
+
+        process.env['queue_build_definition'] = `# Sample comment
+#in multiple lines
+Build 01
+# and a final comment before the next statement
+\\test\\Build 02
+`;
+
+        let tp = path.join(__dirname, 'runner.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'should have succeeded');
+        assert(tr.stdout.indexOf(`Build "Build 01" started`) >= 0, "build definition for build1 should be valid");
+        assert(tr.stdout.indexOf(`Build "Build 02" started`) >= 0, "build definition for build2 should be valid");
 
         done();
     });
