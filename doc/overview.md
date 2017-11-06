@@ -19,6 +19,10 @@ Multiple definitions are separated by a new line.
 Folders are separated by a backslash. The starting backslash is optional. Subfolders can also be used for single builds.  
 ![Subfolders configuration](doc/images/config_build_definition_03.png "Subfolders configuration")
 
+* Comments  
+Comments are defined by starting a line with #.  
+![Comments configuration](doc/images/config_build_definition_07.png "Comments configuration")
+
 ---
 
 **Configuration**  
