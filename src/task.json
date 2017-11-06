@@ -8,8 +8,8 @@
     "author": "jb",
     "version": {
         "Major": 1,
-        "Minor": 2,
-        "Patch": 4
+        "Minor": 3,
+        "Patch": 0
     },
     "instanceNameFormat": "Queue build(s) $(buildDefinitionName)",
     "groups": [

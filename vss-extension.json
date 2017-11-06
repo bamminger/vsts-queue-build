@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "queue-build",
-    "version": "1.2.4",
+    "version": "1.3.0",
     "name": "Queue Build(s) Task",
     "description": "A build/release task that queues new build(s).",
     "publisher": "jb",
