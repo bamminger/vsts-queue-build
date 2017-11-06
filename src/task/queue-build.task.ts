@@ -11,13 +11,13 @@ function sleep(ms): Promise<{}> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function linkBuildQueued(builds: Array<BuildWorker>) {
+function linkBuildResults(builds: Array<BuildWorker>) {
     let buildDirectory = getVariable("Agent.BuildDirectory");
     if(buildDirectory == null) {
         return;
     }
 
-    var filepath = path.join(buildDirectory, `buildList.md`);
+    var filepath = path.join(buildDirectory, `QueueBuild_BuildList.md`);
     if (fs.existsSync(filepath)) {
         fs.unlinkSync(filepath);
     }
@@ -57,8 +57,6 @@ async function run() {
             return;
         }
         
-        let isBuildSuccessed = true;
-
         // Poll build result
         let hasUnfinishedTasks;
         do {
@@ -67,23 +65,27 @@ async function run() {
             for (let i = 0; i < builds.length; i++) {
                 if (!(await builds[i].getCompletedStatus())) {
                     hasUnfinishedTasks = true;
-                } else if (!builds[i].getBuildResult()) {
-                    isBuildSuccessed = false;
                 }
             }
         } while (hasUnfinishedTasks);
 
         // Finish task
-        linkBuildQueued(builds);
-        if (isBuildSuccessed) {
-            setResult(TaskResult.Succeeded, `Queue build(s) finished successfully`);
-        } else {
-            setResult(TaskResult.Failed, `Queue build(s) faild`);
+        linkBuildResults(builds);
+
+        // Check build status
+        for (let i = 0; i < builds.length; i++) {
+            if (!builds[i].getBuildResult()) {
+                // At least one build failed
+                setResult(TaskResult.Failed, `Queue build(s) faild`);
+                return;
+            }
         }
 
+        // All builds successfully completed
+        setResult(TaskResult.Succeeded, `Queue build(s) finished successfully`);
     }
     catch (error) {
-        linkBuildQueued(builds);
+        linkBuildResults(builds);
         console.error(error);
         setResult(TaskResult.Failed, `Queue build(s) faild`);
     }

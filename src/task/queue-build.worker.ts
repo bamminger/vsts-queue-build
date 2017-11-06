@@ -1,7 +1,7 @@
-import { IBuildApi } from 'vso-node-api/BuildApi';
 import { Build, BuildStatus, BuildResult, DefinitionReference } from 'vso-node-api/interfaces/BuildInterfaces';
 import { IdentityRef } from 'vso-node-api/interfaces/common/VSSInterfaces';
 import { IEnvironmentConfiguration, IBuildConfiguration } from './configuration';
+import { BuildApi } from './build-api';
 
 const outputTimeInterval: number = 150000; // 2.5 Minutes
 
@@ -17,7 +17,7 @@ export class BuildWorker {
     constructor(
         protected buildConfiguration: IBuildConfiguration,
         protected environmentConfiguration: IEnvironmentConfiguration,
-        protected buildApi: IBuildApi,
+        protected buildApi: BuildApi,
     ) {
         this.buildLink = ``;
         this.isBuildSuccessed = true;
@@ -44,7 +44,7 @@ export class BuildWorker {
                     && b.path.toLowerCase() == this.buildConfiguration.path.toLowerCase());
 
             if (buildDefinition == null) {
-                console.log(`Build definition "${this.buildConfiguration.originalBuildName}" not found`);
+                console.error(`Build definition "${this.buildConfiguration.originalBuildName}" not found`);
                 this.cachedStatus = true;
                 this.isBuildSuccessed = false;
                 return;
@@ -109,7 +109,7 @@ export class BuildWorker {
             }
             else {
                 this.buildLink = `<a style="color:red" href="${build._links.web.href}">Build ${build.definition.name}</a><br>\n`;
-                console.log(`Build "${this.buildConfiguration.buildName}" failed`);
+                console.error(`Build "${this.buildConfiguration.buildName}" failed`);
                 this.isBuildSuccessed = false;
             }
             

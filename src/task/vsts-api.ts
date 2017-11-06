@@ -2,6 +2,7 @@ import { getInput, getDelimitedInput } from 'vsts-task-lib/task';
 import { WebApi, getPersonalAccessTokenHandler } from 'vso-node-api/WebApi';
 import { IBuildApi } from 'vso-node-api/BuildApi';
 import { IEnvironmentConfiguration, IBuildConfiguration, BuildConfiguration, BuildConfigurationParser } from './configuration';
+import { BuildApi } from './build-api';
 
 export class VstsApi {
 
@@ -50,7 +51,7 @@ export class VstsApi {
     * @param teamFoundationUri Team Foundation server uri
     * @param accessToken OAuth token
     */
-    public getBuildApi(): IBuildApi {
+    public getBuildApi(): BuildApi {
         let connection = this.createConnection(this.configuration.teamFoundationUri, this.configuration.accessToken);
 
         let buildApi = connection.getBuildApi();
@@ -58,7 +59,7 @@ export class VstsApi {
             console.log(`Team project: ${this.configuration.teamProject}`);
         }
 
-        return buildApi;
+        return new BuildApi(buildApi);
     }
 
     private createConnection(teamFoundationUri: string, accessToken: string): WebApi {
