@@ -13,11 +13,11 @@ function sleep(ms): Promise<{}> {
 
 function linkBuildResults(builds: Array<BuildWorker>) {
     let buildDirectory = getVariable("Agent.BuildDirectory");
-    if(buildDirectory == null) {
+    if (buildDirectory == null) {
         return;
     }
 
-    var filepath = path.join(buildDirectory, `QueueBuild_BuildList.md`);
+    var filepath = path.join(buildDirectory, `queueBuild-buildList.md`);
     if (fs.existsSync(filepath)) {
         fs.unlinkSync(filepath);
     }
@@ -30,6 +30,7 @@ function linkBuildResults(builds: Array<BuildWorker>) {
     }
     fs.writeFileSync(filepath, dataStr);
     console.log("##vso[task.addattachment type=Distributedtask.Core.Summary;name=Original Builds;]" + filepath);
+    console.log('Original builds linked')
 }
 
 async function run() {
@@ -53,10 +54,11 @@ async function run() {
 
         // Complete task if async is true
         if (configuration.async === true) {
+            linkBuildResults(builds);
             setResult(TaskResult.Succeeded, `Build(s) queued (async).`);
             return;
         }
-        
+
         // Poll build result
         let hasUnfinishedTasks;
         do {

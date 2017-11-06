@@ -88,6 +88,12 @@ export class BuildWorker {
         this.buildQueueResult = await this.buildApi.queueBuild(build, this.environmentConfiguration.teamProject, true);
         console.log(`Build "${this.buildConfiguration.buildName}" started - ${this.buildQueueResult.buildNumber}`);
 
+        // Set initial build link for async tasks
+        if(this.environmentConfiguration.async === true) {
+            build = await this.buildApi.getBuild(this.buildQueueResult.id);
+            this.buildLink = `<a href="${build._links.web.href}">${build.definition.name}</a><br>\n`;
+        }
+        
         this.lastOutputTime = new Date().getTime();
     }
 
@@ -104,11 +110,11 @@ export class BuildWorker {
             console.log(`Build "${this.buildConfiguration.buildName}" completed - ${this.buildQueueResult.buildNumber}`);
 
             if (build.result == BuildResult.Succeeded || build.result == BuildResult.PartiallySucceeded) {
-                this.buildLink = `<a href="${build._links.web.href}">Build ${build.definition.name}</a><br>\n`;
+                this.buildLink = `<a href="${build._links.web.href}">${build.definition.name}</a><br>\n`;
                 console.log(`Build "${this.buildConfiguration.buildName}" succeeded`);
             }
             else {
-                this.buildLink = `<a style="color:red" href="${build._links.web.href}">Build ${build.definition.name}</a><br>\n`;
+                this.buildLink = `<a style="color:red" href="${build._links.web.href}">${build.definition.name}</a><br>\n`;
                 console.error(`Build "${this.buildConfiguration.buildName}" failed`);
                 this.isBuildSuccessed = false;
             }
