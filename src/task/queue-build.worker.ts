@@ -7,21 +7,16 @@ const outputTimeInterval: number = 150000; // 2.5 Minutes
 
 export class BuildWorker {
 
-    protected buildQueueResult: Build;
-    protected cachedStatus: boolean;
+    protected buildId: number;
     protected lastOutputTime: number;
-
-    protected buildLink: string;
-    protected isBuildSuccessed: boolean;
+    protected cachedStatus: boolean;
+    protected cachedBuildResult: Build = null;
 
     constructor(
         protected buildConfiguration: IBuildConfiguration,
         protected environmentConfiguration: IEnvironmentConfiguration,
-        protected buildApi: BuildApi,
-    ) {
-        this.buildLink = ``;
-        this.isBuildSuccessed = true;
-    }
+        protected buildApi: BuildApi
+    ) { }
 
     public async queueBuild(): Promise<void> {
 
@@ -44,9 +39,12 @@ export class BuildWorker {
                     && b.path.toLowerCase() == this.buildConfiguration.path.toLowerCase());
 
             if (buildDefinition == null) {
-                console.error(`Build definition "${this.buildConfiguration.originalBuildName}" not found`);
                 this.cachedStatus = true;
-                this.isBuildSuccessed = false;
+                if (this.environmentConfiguration.async === true) {
+                    throw Error(`Build definition "${this.buildConfiguration.originalBuildName}" not found`);
+                } else {
+                    console.error(`Build definition "${this.buildConfiguration.originalBuildName}" not found`);
+                }
                 return;
             }
         }
@@ -85,15 +83,15 @@ export class BuildWorker {
             console.log(`Queue request parameters for build "${this.buildConfiguration.buildName}": ${JSON.stringify(build)}`);
         }
 
-        this.buildQueueResult = await this.buildApi.queueBuild(build, this.environmentConfiguration.teamProject, true);
-        console.log(`Build "${this.buildConfiguration.buildName}" started - ${this.buildQueueResult.buildNumber}`);
+        let buildQueueResult = await this.buildApi.queueBuild(build, this.environmentConfiguration.teamProject, true);
+        this.buildId = buildQueueResult.id;
+        console.log(`Build "${this.buildConfiguration.buildName}" started - ${buildQueueResult.buildNumber}`);
 
         // Set initial build link for async tasks
-        if(this.environmentConfiguration.async === true) {
-            build = await this.buildApi.getBuild(this.buildQueueResult.id);
-            this.buildLink = `<a href="${build._links.web.href}">${build.definition.name}</a><br>\n`;
+        if (this.environmentConfiguration.async === true) {
+            this.cachedBuildResult = await this.buildApi.getBuild(this.buildId);
         }
-        
+
         this.lastOutputTime = new Date().getTime();
     }
 
@@ -104,21 +102,10 @@ export class BuildWorker {
         }
 
         // Check build status
-        let build = await this.buildApi.getBuild(this.buildQueueResult.id);
+        this.cachedBuildResult = await this.buildApi.getBuild(this.buildId);
 
-        if (build.status === BuildStatus.Completed) {
-            console.log(`Build "${this.buildConfiguration.buildName}" completed - ${this.buildQueueResult.buildNumber}`);
-
-            if (build.result == BuildResult.Succeeded || build.result == BuildResult.PartiallySucceeded) {
-                this.buildLink = `<a href="${build._links.web.href}">${build.definition.name}</a><br>\n`;
-                console.log(`Build "${this.buildConfiguration.buildName}" succeeded`);
-            }
-            else {
-                this.buildLink = `<a style="color:red" href="${build._links.web.href}">${build.definition.name}</a><br>\n`;
-                console.error(`Build "${this.buildConfiguration.buildName}" failed`);
-                this.isBuildSuccessed = false;
-            }
-            
+        if (this.cachedBuildResult.status === BuildStatus.Completed) {
+            console.log(`Build "${this.buildConfiguration.buildName}" completed - ${this.cachedBuildResult.buildNumber}`);
             this.cachedStatus = true;
             return true;
         }
@@ -126,18 +113,29 @@ export class BuildWorker {
         // Ensure output during running builds
         let currentTime = new Date().getTime();
         if (currentTime - outputTimeInterval > this.lastOutputTime) {
-            console.log(`Build "${this.buildConfiguration.buildName}" is running - ${this.buildQueueResult.buildNumber}`);
+            console.log(`Build "${this.buildConfiguration.buildName}" is running - ${this.cachedBuildResult.buildNumber}`);
             this.lastOutputTime = currentTime;
         }
 
         return false;
     }
 
-    public getBuildLink(): string {
-        return this.buildLink;
+    public getBuildResult(): Build {
+        return this.cachedBuildResult;
     }
 
-    public getBuildResult(): boolean {
-        return this.isBuildSuccessed;
+    public getBuildName(): string {
+        return this.buildConfiguration.originalBuildName;
+    }
+
+    public getSuccessStatus(): boolean {
+        if (this.cachedStatus === true
+            && this.cachedBuildResult != null
+            && (this.cachedBuildResult.result == BuildResult.Succeeded || this.cachedBuildResult.result == BuildResult.PartiallySucceeded)
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }
