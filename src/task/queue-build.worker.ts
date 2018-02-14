@@ -86,6 +86,7 @@ export class BuildWorker {
         let buildQueueResult = await this.buildApi.queueBuild(build, this.environmentConfiguration.teamProject, true);
         this.buildId = buildQueueResult.id;
         console.log(`Build "${this.buildConfiguration.buildName}" started - ${buildQueueResult.buildNumber}`);
+        console.log(`      Link: ${buildQueueResult._links.web.href}`);
 
         // Set initial build link for async tasks
         if (this.environmentConfiguration.async === true) {
