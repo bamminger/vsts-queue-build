@@ -12,8 +12,8 @@
         "Patch": 0
     },
     "instanceNameFormat": "Queue build(s) $(buildDefinitionName)",
-    "groups": [
-        {
+    "minimumAgentVersion": "2.117.0",
+    "groups": [{
             "name": "auth",
             "displayName": "Authentication & Authorization",
             "isExpanded": true
@@ -24,8 +24,7 @@
             "isExpanded": false
         }
     ],
-    "inputs": [
-        {
+    "inputs": [{
             "name": "buildDefinitionName",
             "type": "multiLine",
             "label": "Build Definition Name",

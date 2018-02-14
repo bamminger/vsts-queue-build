@@ -105,9 +105,6 @@ Enables the debug mode. Additional information about your build definitions and 
 
 # Further information
 
-Supported: Visual Studio Team Services    
-Unsupported: TFS On Premise
-
 If you need some special kind of setting or a new feature for this extension, don't hesitate to create a github issue or leave your comments below.
 
 Please leave a review below. Thanks!

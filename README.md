@@ -121,9 +121,6 @@ Enables the debug mode. Additional information about your build definitions and 
 
 # Further information
 
-Supported: Visual Studio Team Services    
-Unsupported: TFS On Premise
-
 If you need some special kind of setting or a new feature for this extension, don't hesitate to create a github issue or leave a comment at the vsts extension page.
 https://marketplace.visualstudio.com/items?itemName=jb.queue-build
 
