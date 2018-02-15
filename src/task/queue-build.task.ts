@@ -12,9 +12,10 @@ function sleep(ms): Promise<{}> {
 async function run() {
 
     let builds = new Array<BuildWorker>();
+    let configuration: EnvironmentConfiguration;
     try {
         // Get environment variables
-        let configuration = new EnvironmentConfiguration();
+        configuration = new EnvironmentConfiguration();
 
         // Get Vsts Build Api
         let api = new VstsApi(configuration);
@@ -63,7 +64,7 @@ async function run() {
     }
     catch (error) {
         console.error(error);
-        TaskSummary.attach(builds, null);
+        TaskSummary.attach(builds, configuration);
         setResult(TaskResult.Failed, `Queue build(s) faild`);
     }
 }

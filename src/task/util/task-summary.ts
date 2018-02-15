@@ -10,7 +10,11 @@ export abstract class TaskSummary {
         builds: Array<BuildWorker>,
         environmentConfiguration: IEnvironmentConfiguration
     ) {
+        if (environmentConfiguration == null || environmentConfiguration.workDirectory == null) {
+            return;
+        }
         var filepath = path.join(environmentConfiguration.workDirectory, `QueueBuild-BuildResult.html`);
+
         if (fs.existsSync(filepath)) {
             fs.unlinkSync(filepath);
         }

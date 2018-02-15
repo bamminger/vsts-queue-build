@@ -5,13 +5,14 @@ import { MockTestRunner } from 'vsts-task-lib/mock-test';
 const timeout: number = 100000;
 
 function initializeEnvironment(): void {
-    process.env['SYSTEM_TEAMPROJECT'] = '';
-    process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = '';
+    process.env['SYSTEM_TEAMPROJECT'] = 'VSTS-Queue-Build';
+    process.env['SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'] = 'https://xxx.visualstudio.com';
     process.env['queue_build_auth_token'] = '';
     process.env['queue_build_debug'] = 'true';
     process.env['queue_build_async'] = 'false';
     process.env['queue_build_configuration_type'] = 'json';
     process.env['queue_build_configuration'] = '';
+    process.env['queue_build_team_project_type'] = 'current';
 }
 
 
