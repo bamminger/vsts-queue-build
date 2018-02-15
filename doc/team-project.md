@@ -1,4 +1,4 @@
-**Team project**  
+# Team project  
 
 The following settings are available to configure the team project.
 

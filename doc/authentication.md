@@ -1,4 +1,4 @@
-**Authentication & Authorization**
+# Authentication & Authorization
 
 * Use Requestor User  
 This setting controls whether the user who has triggered this build or release is used for triggering the new build or the default collection service account.

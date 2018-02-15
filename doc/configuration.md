@@ -1,4 +1,4 @@
-**Configuration**
+# Configuration
 
 You can use the configuration field to configure the variables per build:
 
@@ -46,7 +46,7 @@ Currently tested configuration settings:
 }
 ```
 
-**Configuration type**
+# Configuration type
 
 * JSON  
 The content of the configuration field will be interpreted as JSON.
@@ -57,7 +57,7 @@ Before the configuration content is interpreted as JSON, all backslash (\\) occu
 ![Configuration type](images/config_build_definition_05.png "Configuration type")
 
 
-**Async**
+# Async
 
 The async flag defines whether the build task waits till the builds are finished or just queues them.
 
