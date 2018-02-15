@@ -1,7 +1,6 @@
 import path = require('path');
 import fs = require('fs');
 
-import { getVariable } from 'vsts-task-lib';
 import { BuildWorker } from '../queue-build.worker';
 import { IEnvironmentConfiguration } from '../configuration';
 
@@ -10,15 +9,7 @@ export abstract class TaskSummary {
         builds: Array<BuildWorker>,
         environmentConfiguration: IEnvironmentConfiguration
     ) {
-        let workDirectory = getVariable("Agent.BuildDirectory");
-        if (workDirectory == null) {
-            workDirectory = getVariable("Agent.ReleaseDirectory");
-            if (workDirectory == null) {
-                return;
-            }
-        }
-
-        var filepath = path.join(workDirectory, `QueueBuild-BuildResult.html`);
+        var filepath = path.join(environmentConfiguration.workDirectory, `QueueBuild-BuildResult.html`);
         if (fs.existsSync(filepath)) {
             fs.unlinkSync(filepath);
         }

@@ -1,5 +1,5 @@
-import { TaskResult, setResult, getVariable } from 'vsts-task-lib/task';
-import { WebApi, getPersonalAccessTokenHandler } from 'vso-node-api/WebApi';
+import { TaskResult, setResult } from 'vsts-task-lib/task';
+import { WebApi } from 'vso-node-api/WebApi';
 import { BuildWorker } from './queue-build.worker';
 import { VstsApi } from './vsts-api';
 import { EnvironmentConfiguration } from './configuration';

@@ -8,6 +8,7 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
     teamProject: string;
     teamFoundationUri: string;
     requestedFor: string | null;
+    workDirectory: string;
 
     async: boolean;
 
@@ -17,6 +18,7 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
         this.teamProject = this.getTeamProject();
         this.teamFoundationUri = this.getTeamFoundationUri();
         this.requestedFor = this.getRequestedFor();
+        this.workDirectory = this.getWorkDirectory();
 
         this.async = this.getAsync();
     }
@@ -80,5 +82,19 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
      */
     private getTeamFoundationUri(): string {
         return getVariable('system.teamFoundationCollectionUri');
+    }
+
+    /**
+     * Get build/release specific work directory
+     */
+    private getWorkDirectory() {
+        let taskWorkDirectory = getVariable("Agent.BuildDirectory");
+        if (taskWorkDirectory == null) {
+            taskWorkDirectory = getVariable("Agent.ReleaseDirectory");
+            if (taskWorkDirectory == null) {
+                return null;
+            }
+        }
+        return taskWorkDirectory;
     }
 }

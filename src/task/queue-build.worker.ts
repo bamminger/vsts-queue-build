@@ -1,5 +1,4 @@
 import { Build, BuildStatus, BuildResult, DefinitionReference } from 'vso-node-api/interfaces/BuildInterfaces';
-import { IdentityRef } from 'vso-node-api/interfaces/common/VSSInterfaces';
 import { IEnvironmentConfiguration, IBuildConfiguration } from './configuration';
 import { BuildApi } from './build-api';
 

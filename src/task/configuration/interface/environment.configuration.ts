@@ -5,7 +5,8 @@ export interface IEnvironmentConfiguration {
     teamProject: string;
     teamFoundationUri: string;
     requestedFor: string;
-    
+    workDirectory: string;
+
     async: boolean;
 
 }
