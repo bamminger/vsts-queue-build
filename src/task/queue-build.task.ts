@@ -21,9 +21,8 @@ async function run() {
         let buildApi = api.getBuildApi();
 
         // Start builds
-        let buildsToStart = api.getBuildConfigurations();
-        for (let i = 0; i < buildsToStart.length; i++) {
-            let worker = new BuildWorker(buildsToStart[i], configuration, buildApi);
+        for (let i = 0; i < configuration.buildConfigurations.length; i++) {
+            let worker = new BuildWorker(configuration.buildConfigurations[i], configuration, buildApi);
             builds.push(worker);
             await worker.queueBuild();
         }
@@ -38,7 +37,7 @@ async function run() {
         // Poll build result
         let hasUnfinishedTasks;
         do {
-            await sleep(1000);
+            await sleep(2000);
             hasUnfinishedTasks = false;
             for (let i = 0; i < builds.length; i++) {
                 if (!(await builds[i].getCompletedStatus())) {

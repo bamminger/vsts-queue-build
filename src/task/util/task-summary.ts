@@ -3,6 +3,7 @@ import fs = require('fs');
 
 import { BuildWorker } from '../queue-build.worker';
 import { IEnvironmentConfiguration } from '../configuration';
+import { TeamProjectType } from '../enum/team-project-type.enum';
 
 export abstract class TaskSummary {
     public static attach(
@@ -50,7 +51,13 @@ export abstract class TaskSummary {
                         summary += `<span ${baseIconDefinition} build-failure-icon-color bowtie-edit-delete" aria-label="failed" title="Failed"></span>\n`;
                     }
                 }
-                summary += `<a href="${buildResult._links.web.href}">${buildResult.definition.name}</a>\n`;
+
+                let buildNameOutput = buildResult.definition.name;
+                if (environmentConfiguration.teamProjectType === TeamProjectType.JsonConfiguration) {
+                    buildNameOutput += `  (Team project: ${buildResult.project.name})`;
+                }
+
+                summary += `<a href="${buildResult._links.web.href}">${buildNameOutput}</a>\n`;
             }
 
             summary += `</div>\n`;

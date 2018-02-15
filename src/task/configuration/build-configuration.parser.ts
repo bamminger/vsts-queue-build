@@ -1,5 +1,5 @@
-import { BuildConfiguration } from './build.configuration';
 import { Build } from 'vso-node-api/interfaces/BuildInterfaces';
+import { BuildConfiguration } from './build.configuration';
 
 export class BuildConfigurationParser {
 

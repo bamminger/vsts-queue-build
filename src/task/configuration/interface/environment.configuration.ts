@@ -1,12 +1,12 @@
+import { TeamProjectType } from "../../enum/team-project-type.enum";
+
 export interface IEnvironmentConfiguration {
+    teamFoundationUri: string;
+    workDirectory: string;
 
     debug: boolean;
     accessToken: string;
-    teamProject: string;
-    teamFoundationUri: string;
     requestedFor: string;
-    workDirectory: string;
-
     async: boolean;
-
+    teamProjectType: TeamProjectType;
 }

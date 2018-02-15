@@ -2,7 +2,6 @@ import { Build } from "vso-node-api/interfaces/BuildInterfaces";
 import { IBuildApi } from "vso-node-api/BuildApi";
 
 export class BuildApi {
-
     constructor(private buildApi: IBuildApi) { }
 
     public queueBuild(build: Build, project: string, ignoreWarnings: boolean) {

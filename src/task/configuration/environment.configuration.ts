@@ -1,26 +1,61 @@
-import { getInput, getVariable, getEndpointAuthorization, getBoolInput } from 'vsts-task-lib/task';
-import { IEnvironmentConfiguration } from './interface';
+import { getInput, getVariable, getDelimitedInput, getEndpointAuthorization, getBoolInput } from 'vsts-task-lib/task';
+import { IBuildConfiguration, IEnvironmentConfiguration } from './interface';
+import { TeamProjectType } from '../enum/team-project-type.enum';
+import { BuildConfiguration } from './build.configuration';
+import { BuildConfigurationParser } from './build-configuration.parser';
 
 export class EnvironmentConfiguration implements IEnvironmentConfiguration {
+    public teamFoundationUri: string;
+    public workDirectory: string;
 
-    debug: boolean;
-    accessToken: string;
-    teamProject: string;
-    teamFoundationUri: string;
-    requestedFor: string | null;
-    workDirectory: string;
+    public debug: boolean;
+    public accessToken: string;
+    public requestedFor: string | null;
+    public async: boolean;
+    public buildConfigurations: IBuildConfiguration[];
 
-    async: boolean;
+    public teamProjectType: TeamProjectType;
+    private teamProject: string;
 
     constructor() {
-        this.debug = this.getDebug();
-        this.accessToken = this.getAccessToken();
-        this.teamProject = this.getTeamProject();
         this.teamFoundationUri = this.getTeamFoundationUri();
-        this.requestedFor = this.getRequestedFor();
         this.workDirectory = this.getWorkDirectory();
 
+        this.debug = this.getDebug();
+        this.accessToken = this.getAccessToken();
+        this.requestedFor = this.getRequestedFor();
         this.async = this.getAsync();
+
+        // Team project must be set before the configuration is parsed
+        this.setTeamProject();
+
+        this.buildConfigurations = this.getBuildConfigurations();
+    }
+
+    /**
+     * Set team project & type depending on user input
+     */
+    private setTeamProject() {
+        let configType = getInput('teamProjectType', true);
+        switch (configType) {
+            case "defined":
+                this.teamProject = getInput('teamProject', true);
+                this.teamProjectType = TeamProjectType.Defined;
+                break;
+            case "configuration":
+                this.teamProject = null;
+                this.teamProjectType = TeamProjectType.JsonConfiguration;
+                break;
+            default:
+                this.teamProject = this.getTeamProject();
+                this.teamProjectType = TeamProjectType.Current;
+                break;
+        }
+
+        if (this.debug) {
+            console.log(`Team project type: ${this.teamProjectType}`);
+            console.log(`Team project: ${this.teamProject}`);
+        }
     }
 
     /**
@@ -96,5 +131,57 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
             }
         }
         return taskWorkDirectory;
+    }
+
+    /** 
+     * Parse & convert json configuration for the builds
+     */
+    public getBuildConfigurations(): IBuildConfiguration[] {
+
+        // Process build configuration
+        let buildConfigurationInput = getInput('buildConfiguration', false);
+        if (this.debug) {
+            console.log(`Build configuration ${buildConfigurationInput}`);
+        }
+
+        let configType = getInput('buildConfigurationType', true);
+
+        let configParser = new BuildConfigurationParser();
+        configParser.fill(buildConfigurationInput, configType);
+        if (this.debug) {
+            console.log(`Build configuration parsed: ${configParser.toString()}`);
+        }
+
+        // Process build definition names
+        let buildsToStart = getDelimitedInput('buildDefinitionName', '\n', true);
+        if (this.debug) {
+            console.log(`Build(s) to start (plain) ${getInput('buildDefinitionName', true)}`);
+        }
+
+        let buildConfigurations = new Array<IBuildConfiguration>();
+        for (let i = 0; i < buildsToStart.length; i++) {
+            let buildName = buildsToStart[i];
+
+            // if build definition which start with "#", we will igrone it
+            if (!buildName.startsWith("#")) {
+                let buildConfig = new BuildConfiguration(buildName, this.teamProject);
+                buildConfig.configuration = configParser.getBuildConfiguration(buildConfig);
+
+                if (this.teamProjectType === TeamProjectType.JsonConfiguration) {
+                    buildConfig.teamProject = buildConfig.configuration['teamProject'];
+                    delete buildConfig.configuration['teamProject'];
+                }
+
+                if (buildConfig.teamProject == null || buildConfig.teamProject.trim() === '') {
+                    throw new Error("Missing team project configuration. Team project type: " + this.teamProjectType
+                        + ", Build name: " + buildConfig.originalBuildName
+                        + ", Build configuration: " + buildConfig.configuration);
+                }
+
+                buildConfigurations.push(buildConfig);
+            }
+        }
+
+        return buildConfigurations;
     }
 }

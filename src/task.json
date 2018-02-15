@@ -12,7 +12,7 @@
         "Patch": 0
     },
     "instanceNameFormat": "Queue build(s) $(buildDefinitionName)",
-    "minimumAgentVersion": "2.117.0",
+    "minimumAgentVersion": "2.105.0",
     "groups": [{
             "name": "auth",
             "displayName": "Authentication & Authorization",
@@ -37,7 +37,7 @@
             "type": "radio",
             "label": "Configuration type",
             "defaultValue": "singleBackslashJson",
-            "required": false,
+            "required": true,
             "helpMarkDown": "Specify the build configuration interpretation type. E.g.: Use JavaScript if you need to support a single backslash.",
             "options": {
                 "json": "JSON",
@@ -50,7 +50,7 @@
             "label": "Configuration",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specify queue build parameters. Example: { \"sourceBranch\": null, \"sourceVersion\": null, \"parameters\": { \"system.debug\": true } }. Further information: https://marketplace.visualstudio.com/items?itemName=jb.queue-build"
+            "helpMarkDown": "Specify queue build parameters. \n Example: \n { \"sourceBranch\": null, \"sourceVersion\": null, \"parameters\": { \"system.debug\": true } }. \n\n Further information: https://marketplace.visualstudio.com/items?itemName=jb.queue-build"
         },
         {
             "name": "async",
@@ -61,10 +61,31 @@
             "helpMarkDown": "The async flag defines whether the build task waits till the builds are finished or just queues them."
         },
         {
+            "name": "teamProjectType",
+            "type": "radio",
+            "label": "Team Project type",
+            "defaultValue": "current",
+            "required": true,
+            "helpMarkDown": "Team project selection type. \n\n Current = Team project of the Build/Release definition, \n Defined = Team project specified in text field \n JSON Configuration = Team project defined in Configuration field",
+            "options": {
+                "current": "Current",
+                "defined": "Defined",
+                "configuration": "JSON Configuration"
+            }
+        },
+        {
+            "name": "teamProject",
+            "type": "string",
+            "label": "Team Project Name",
+            "required": true,
+            "helpMarkDown": "Name of the team project where the builds should be queued.",
+            "visibleRule": "teamProjectType = defined"
+        },
+        {
             "name": "requestedFor",
             "type": "boolean",
             "label": "Use Requester User",
-            "defaultValue": false,
+            "defaultValue": true,
             "required": true,
             "helpMarkDown": "Activate this checkbox to use the same requester user for the queue builds that was used for the current build/release.",
             "groupName": "auth"
