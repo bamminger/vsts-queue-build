@@ -76,3 +76,9 @@ If you need some special kind of setting or a new feature for this extension, do
 https://marketplace.visualstudio.com/items?itemName=jb.queue-build  
 
 Please leave a review in the marketplace with your feedback.
+
+
+## Donation  
+If you like my work, please consider buying me a coffee
+<link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet"><a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/bamminger"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="Buy me a coffee"><span style="margin-left:5px">Buy me a coffee</span></a>
+
