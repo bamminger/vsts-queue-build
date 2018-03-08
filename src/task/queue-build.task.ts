@@ -54,7 +54,7 @@ async function run() {
         for (let i = 0; i < builds.length; i++) {
             if (builds[i].getSuccessStatus() === false) {
                 // At least one build failed
-                setResult(TaskResult.Failed, `Queue build(s) faild`);
+                setResult(TaskResult.Failed, `Queue build(s) failed`);
                 return;
             }
         }
@@ -65,7 +65,7 @@ async function run() {
     catch (error) {
         console.error(error);
         TaskSummary.attach(builds, configuration);
-        setResult(TaskResult.Failed, `Queue build(s) faild`);
+        setResult(TaskResult.Failed, `Queue build(s) failed`);
     }
 }
 
