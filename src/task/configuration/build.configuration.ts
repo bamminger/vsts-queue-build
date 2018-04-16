@@ -1,10 +1,11 @@
-import { IBuildConfiguration } from './interface';
 import { Build } from 'vso-node-api/interfaces/BuildInterfaces';
+import { IBuildConfiguration } from './interface';
 
 export class BuildConfiguration implements IBuildConfiguration {
     path: string;
     buildName: string;
     configuration: Build;
+    buildDefinitionId: number | null;
 
     constructor(
         public originalBuildName: string,

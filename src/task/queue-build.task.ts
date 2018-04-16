@@ -22,8 +22,9 @@ async function run() {
         let buildApi = api.getBuildApi();
 
         // Start builds
-        for (let i = 0; i < configuration.buildConfigurations.length; i++) {
-            let worker = new BuildWorker(configuration.buildConfigurations[i], configuration, buildApi);
+        let buildConfigurations = await configuration.getBuildConfigurations(buildApi);
+        for (let i = 0; i < buildConfigurations.length; i++) {
+            let worker = new BuildWorker(buildConfigurations[i], configuration, buildApi);
             builds.push(worker);
             await worker.queueBuild();
         }

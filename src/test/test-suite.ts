@@ -272,11 +272,11 @@ sourceVersion: null,
     }
 },
 "Build 01": {
-    "sourceBranch": "feature/angular-release"
+    "sourceBranch": "feature/test"
 },
 "Build 02": {
     "sourceBranch": "master",
-    "sourceVersion": "7501defae79c4bedf4ab2231bae3cd01664bf18c"
+    "sourceVersion": "c372910406c50fa8a67af50639308729a2da58e4"
 }
 }`;
 
@@ -288,8 +288,8 @@ sourceVersion: null,
         assert(tr.stdout.indexOf(`Build "Build 01" started`) >= 0, "build definition for build1 should be valid");
         assert(tr.stdout.indexOf(`Build "Build 02" started`) >= 0, "build definition for build2 should be valid");
         assert(tr.stdout.indexOf(`Build "Build 03" started`) >= 0, "build definition for build3 should be valid");
-        assert(tr.stdout.indexOf(`Queue request parameters for build "Build 01": {"sourceBranch":"feature/angular-release","definition":{"id":`) >= 0, "build configuration for build1 should be valid");
-        assert(tr.stdout.indexOf(`Queue request parameters for build "Build 02": {"sourceBranch":"master","sourceVersion":"7501defae79c4bedf4ab2231bae3cd01664bf18c","definition":{"id":`) >= 0, "build configuration for build2 should be valid");
+        assert(tr.stdout.indexOf(`Queue request parameters for build "Build 01": {"sourceBranch":"feature/test","definition":{"id":`) >= 0, "build configuration for build1 should be valid");
+        assert(tr.stdout.indexOf(`Queue request parameters for build "Build 02": {"sourceBranch":"master","sourceVersion":"c372910406c50fa8a67af50639308729a2da58e4","definition":{"id":`) >= 0, "build configuration for build2 should be valid");
         assert(tr.stdout.indexOf(`Queue request parameters for build "Build 03": {"parameters":"{\\"system.debug\\":true,\\"testVariable\\":\\"Another value\\"}","definition":{"id":`) >= 0, "build configuration for build3 should be valid");
 
         done();
@@ -391,6 +391,51 @@ Build 01
         assert(tr.succeeded, 'should have succeeded');
         assert(tr.stdout.indexOf(`Build "Build 01" started`) >= 0, "build definition for build1 should be valid");
         assert(tr.stdout.indexOf(`Build "Build 02" started`) >= 0, "build definition for build2 should be valid");
+
+        done();
+    });
+
+});
+
+
+/*
+ *  Wildcard tests 
+ */
+describe('Wildcard queue build tests', function () {
+    this.timeout(timeout);
+
+    before(initializeEnvironment);
+
+    it('valid definitions with wildcard', (done: MochaDone) => {
+
+        process.env['queue_build_definition'] = `
+Build 01
+\\test\\wildcard\\*
+`;
+
+        let tp = path.join(__dirname, 'runner.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'should have succeeded');
+        assert(tr.stdout.indexOf(`Build "Build 01" started`) >= 0, "build definition for build1 should be valid");
+        assert(tr.stdout.indexOf(`Build "Build 02 - wildcard" started`) >= 0, "build definition for build2-wildcard should be valid");
+        assert(tr.stdout.indexOf(`Build "Build 03 - wildcard" started`) >= 0, "build definition for build3-wildcard should be valid");
+
+        done();
+    });
+
+    it('invalid folder with wildcard', (done: MochaDone) => {
+
+        process.env['queue_build_definition'] = `
+\\test\\invalid\\*
+`;
+
+        let tp = path.join(__dirname, 'runner.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'should have succeeded');
 
         done();
     });

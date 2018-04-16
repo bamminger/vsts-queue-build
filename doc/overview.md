@@ -25,6 +25,7 @@ The path to your build definitions. Supports:
 * Multiple builds
 * Subfolders
 * Comments
+* Wildcards
 
 ![Single build configuration](doc/images/config_build_definition_01.png "Single build configuration")
 

@@ -17,3 +17,7 @@ Folders are separated by a backslash. The starting backslash is optional. Subfol
 * Comments  
 Comments are defined by starting a line with #.  
 ![Comments configuration](images/config_build_definition_06.png "Comments configuration")
+
+* Wildcards  
+Wildcards end with an asterisk (*), to start all definitions within the specified folder.  
+![Wildcard configuration](images/config_build_definition_07.png "Wildcard configuration")

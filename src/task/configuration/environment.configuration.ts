@@ -1,8 +1,10 @@
 import { getInput, getVariable, getDelimitedInput, getEndpointAuthorization, getBoolInput } from 'vsts-task-lib/task';
+import { BuildApi } from '../build-api';
 import { IBuildConfiguration, IEnvironmentConfiguration } from './interface';
 import { TeamProjectType } from '../enum/team-project-type.enum';
 import { BuildConfiguration } from './build.configuration';
 import { BuildConfigurationParser } from './build-configuration.parser';
+import { getTeamProjectOutput } from '../util/output';
 
 export class EnvironmentConfiguration implements IEnvironmentConfiguration {
     public teamFoundationUri: string;
@@ -12,7 +14,6 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
     public accessToken: string;
     public requestedFor: string | null;
     public async: boolean;
-    public buildConfigurations: IBuildConfiguration[];
 
     public teamProjectType: TeamProjectType;
     private teamProject: string;
@@ -28,8 +29,6 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
 
         // Team project must be set before the configuration is parsed
         this.setTeamProject();
-
-        this.buildConfigurations = this.getBuildConfigurations();
     }
 
     /**
@@ -136,8 +135,7 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
     /** 
      * Parse & convert json configuration for the builds
      */
-    public getBuildConfigurations(): IBuildConfiguration[] {
-
+    public async getBuildConfigurations(buildApi: BuildApi): Promise<IBuildConfiguration[]> {
         // Process build configuration
         let buildConfigurationInput = getInput('buildConfiguration', false);
         if (this.debug) {
@@ -182,6 +180,71 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
             }
         }
 
-        return buildConfigurations;
+        return await this.loadBuildDefinitions(buildApi, buildConfigurations);
+    }
+
+    private async loadBuildDefinitions(buildApi: BuildApi, definitions: IBuildConfiguration[]): Promise<IBuildConfiguration[]> {
+        let result: IBuildConfiguration[] = [];
+
+        for (let i = 0; i < definitions.length; i++) {
+            let buildConfiguration = definitions[i];
+
+            // Get build definitions
+            let buildDefinitions = await buildApi.getDefinitions(buildConfiguration.teamProject);
+            if (this.debug) {
+                console.log(`Builds${getTeamProjectOutput(this, buildConfiguration, true, false)}: ${JSON.stringify(buildDefinitions)}`);
+            }
+
+            // Process build path
+            if (this.debug) {
+                console.log(`Path: ${buildConfiguration.path}, Build name: ${buildConfiguration.buildName}`);
+            }
+
+            // Find wild card build definitions
+            if (buildConfiguration.buildName.endsWith('*')) {
+                let filteredDefinitions = buildDefinitions.filter(b => b.path == buildConfiguration.path);
+
+                for (let k = 0; k < filteredDefinitions.length; k++) {
+                    let definition = filteredDefinitions[k];
+
+                    // Clone configuration for each build
+                    let config = JSON.parse(JSON.stringify(buildConfiguration));
+                    config.buildName = definition.name;
+                    config.buildDefinitionId = definition.id;
+                    result.push(config);
+
+                    if (this.debug) {
+                        console.log(` - Build definition id: ${config.buildDefinitionId}`);
+                    }
+                }
+                continue;
+            }
+
+            // Find build definition
+            let buildDefinition = buildDefinitions.find(b => b.name === buildConfiguration.buildName && b.path == buildConfiguration.path);
+            if (buildDefinition == null) {
+                buildDefinition = buildDefinitions
+                    .find(b => b.name.toLowerCase() === buildConfiguration.buildName.toLowerCase()
+                        && b.path.toLowerCase() == buildConfiguration.path.toLowerCase());
+
+                if (buildDefinition == null) {
+                    if (this.async === true) {
+                        throw Error(`Build definition "${buildConfiguration.originalBuildName}" not found ${getTeamProjectOutput(this, buildConfiguration, false, false)}`);
+                    } else {
+                        console.error(`Build definition "${buildConfiguration.originalBuildName}" not found ${getTeamProjectOutput(this, buildConfiguration, false, false)}`);
+                    }
+                }
+            }
+
+            let id = buildDefinition != null ? buildDefinition.id : null;
+            if (this.debug) {
+                console.log(`Build definition id: ${id} ${getTeamProjectOutput(this, buildConfiguration, false, false)}`);
+            }
+
+            buildConfiguration.buildDefinitionId = id;
+            result.push(buildConfiguration);
+        }
+
+        return result;
     }
 }

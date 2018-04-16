@@ -5,6 +5,7 @@ export interface IBuildConfiguration {
     path: string;
     buildName: string;
     configuration: Build;
+    buildDefinitionId: number | null;
 
     originalBuildName: string; // For debugging
 }

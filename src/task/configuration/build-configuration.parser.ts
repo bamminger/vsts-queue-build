@@ -8,8 +8,6 @@ export class BuildConfigurationParser {
     private globalConfiguration: Build = null;
     private buildSpecificConfiguration: { [buildName: string]: Build } = null;
 
-    constructor() { }
-
     public fill(input: string, configType: string): void {
         try {
 
