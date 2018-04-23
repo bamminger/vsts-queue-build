@@ -29,7 +29,7 @@ All the other builds will be associated by their build name or path + buildname.
 
 *Possible settings*:
 
-It is possible to use all supported [VSTS / TFS api](https://www.visualstudio.com/en-us/docs/integrate/api/build/builds#queue-a-build) settings.
+It is possible to use all supported [VSTS / TFS api](https://docs.microsoft.com/de-de/rest/api/vsts/build/builds/queue#request-body) settings.
 Currently tested configuration settings:
 
 ```json
