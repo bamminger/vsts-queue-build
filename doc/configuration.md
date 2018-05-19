@@ -29,13 +29,17 @@ All the other builds will be associated by their build name or path + buildname.
 
 *Possible settings*:
 
-It is possible to use all supported [VSTS / TFS api](https://docs.microsoft.com/de-de/rest/api/vsts/build/builds/queue#request-body) settings.
+It is possible to use all supported [VSTS / TFS api](https://docs.microsoft.com/de-de/rest/api/vsts/build/builds/queue#request-body) settings.  
+It is also possible to add special settings like:
+* buildIdOutputVariable - defines a build specific variable for the build id
+
 Currently tested configuration settings:
 
 ```json
 {
     "sourceBranch": "value",
     "sourceVersion": "value",
+    "buildIdOutputVariable": "value",
     "parameters": {
         "parameterName": "value"
     },

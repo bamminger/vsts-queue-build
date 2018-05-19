@@ -10,7 +10,7 @@
 * Queue builds async
 * Configurable authentication
 * Team project indepentent queuing
-* Build & Releas summary
+* Build & Release summary
 
 ![Single build configuration](doc/images/task_overview.png "Single build configuration")  
 A simple task configuration to start several builds with the same variables.  
@@ -40,6 +40,7 @@ You can use the configuration field to configure the variables per build:
 * Team project
 * Branch
 * Commit version
+* Build ID output variable
 * Build parameters  
 
 ![Build configuration](doc/images/config_build_definition_04.png "Build configuration")
@@ -66,9 +67,10 @@ Detailed documentation on Github: [Authentication](https://github.com/bamminger/
 
 ---
  
-**Troubleshooting**  
-Enable the debug mode. Additional information about your build definitions and the processed input will be provided.  
-![Debug configuration](doc/images/config_debug.png "Debug configuration")
+**Advanced**  
+Define a variable name for the result build ids and enable debug mode for Troubleshooting. Additional information about your build definitions and the processed input will be provided.  
+
+![Advanced configuration](doc/images/config_advanced.png "Advanced configuration")
 
 
 # Further information
