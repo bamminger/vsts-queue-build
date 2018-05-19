@@ -179,7 +179,9 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
                     delete buildConfig.configuration['teamProject'];
                 }
 
-                if (Object.getOwnPropertyNames(buildConfig.configuration).indexOf('buildIdOutputVariable') > -1) {
+                if (buildConfig.configuration != null
+                    && Object.getOwnPropertyNames(buildConfig.configuration).indexOf('buildIdOutputVariable') > -1
+                ) {
                     buildConfig.buildIdOutputVariable = buildConfig.configuration['buildIdOutputVariable'];
                     delete buildConfig.configuration['buildIdOutputVariable'];
                 }

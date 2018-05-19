@@ -442,3 +442,87 @@ Build 01
     });
 
 });
+
+
+/*
+ *  Build id output variable
+ */
+describe('Build id output queue build tests', function () {
+    this.timeout(timeout);
+
+    before(initializeEnvironment);
+
+    it('valid global build id', (done: MochaDone) => {
+
+        process.env['queue_build_buildid_output_variable'] = 'OutputVarTest';
+        process.env['queue_build_definition'] = `Build 01`;
+
+        let tp = path.join(__dirname, 'runner.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'should have succeeded');
+        assert(/task\.setvariable variable=OutputVarTest;]\d+/.test(tr.stdout), "build id must be written to console");
+
+        done();
+    });
+
+    it('concat multiple build ids', (done: MochaDone) => {
+
+        process.env['queue_build_buildid_output_variable'] = 'OutputVarTest';
+        process.env['queue_build_definition'] = `Build 01
+\\test\\Build 02`;
+
+        let tp = path.join(__dirname, 'runner.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'should have succeeded');
+        assert(/task\.setvariable variable=OutputVarTest;]\d+,\d+/.test(tr.stdout), "build ids must be concatenated with a comma");
+
+        done();
+    });
+
+    it('no valid variable name should be not used', (done: MochaDone) => {
+
+        process.env['queue_build_buildid_output_variable'] = '';
+        process.env['queue_build_definition'] = `Build 01`;
+
+        let tp = path.join(__dirname, 'runner.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'should have succeeded');
+        assert(/task\.setvariable variable=;]\d+/.test(tr.stdout) == false, "no name is an invalid value");
+
+        done();
+    });
+
+    it('build specific build id output in addition to the global', (done: MochaDone) => {
+
+        process.env['queue_build_buildid_output_variable'] = 'OutputVarTest';
+        process.env['queue_build_definition'] = `Build 01
+\\test\\Build 02`;
+
+        process.env['queue_build_configuration'] = `{
+    "Build 01": {
+        "buildIdOutputVariable": "Build1OutputVariable"
+    },
+    "Build 02": {
+        "buildIdOutputVariable": "Build2OutputVariable"
+    }
+}`;
+
+        let tp = path.join(__dirname, 'runner.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'should have succeeded');
+        assert(/task\.setvariable variable=OutputVarTest;]\d+,\d+/.test(tr.stdout), "global variable must be used in combination with build specific");
+        assert(/task\.setvariable variable=Build1OutputVariable;]\d+/.test(tr.stdout), "build 1 has a valid output variable value");
+        assert(/task\.setvariable variable=Build2OutputVariable;]\d+/.test(tr.stdout), "build 2 has a valid output variable value");
+
+        done();
+    });
+
+});
