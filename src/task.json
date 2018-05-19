@@ -100,6 +100,15 @@
             "groupName": "auth"
         },
         {
+            "name": "buildIdOutputVariable",
+            "type": "string",
+            "label": "Build Id Output Variable",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Variable name used to write the resulting build id's.",
+            "groupName": "advanced"
+        },
+        {
             "name": "debug",
             "type": "boolean",
             "label": "Debug",

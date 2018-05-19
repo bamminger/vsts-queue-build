@@ -12,6 +12,7 @@ tmr.setInput('buildConfiguration', process.env['queue_build_configuration']);
 tmr.setInput('buildConfigurationType', process.env['queue_build_configuration_type']);
 tmr.setInput('authToken', process.env['queue_build_auth_token']);
 tmr.setInput('teamProjectType', process.env['queue_build_team_project_type']);
+tmr.setInput('buildIdOutputVariable', process.env['queue_build_buildid_output_variable']);
 
 var mockBuildApi = require('./mock-build-api');
 

@@ -14,6 +14,7 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
     public accessToken: string;
     public requestedFor: string | null;
     public async: boolean;
+    public buildIdOutputVariable: string | null;
 
     public teamProjectType: TeamProjectType;
     private teamProject: string;
@@ -26,6 +27,7 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
         this.accessToken = this.getAccessToken();
         this.requestedFor = this.getRequestedFor();
         this.async = this.getAsync();
+        this.buildIdOutputVariable = this.getBuildIdOutputVariable();
 
         // Team project must be set before the configuration is parsed
         this.setTeamProject();
@@ -55,6 +57,13 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
             console.log(`Team project type: ${this.teamProjectType}`);
             console.log(`Team project: ${this.teamProject}`);
         }
+    }
+
+    /**
+     * Get build id output variable
+     */
+    private getBuildIdOutputVariable(): string {
+        return getInput('buildIdOutputVariable', false);
     }
 
     /**

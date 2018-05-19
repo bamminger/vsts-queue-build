@@ -13,6 +13,7 @@ function initializeEnvironment(): void {
     process.env['queue_build_configuration_type'] = 'json';
     process.env['queue_build_configuration'] = '';
     process.env['queue_build_team_project_type'] = 'current';
+    process.env['queue_build_buildid_output_variable'] = '';
 }
 
 
