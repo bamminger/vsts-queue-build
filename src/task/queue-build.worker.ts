@@ -2,7 +2,7 @@ import { Build, BuildStatus, BuildResult, DefinitionReference } from 'vso-node-a
 import { IEnvironmentConfiguration, IBuildConfiguration } from './configuration';
 import { BuildApi } from './build-api';
 import { TeamProjectType } from './enum/team-project-type.enum';
-import { getTeamProjectOutput } from './util/output';
+import { getTeamProjectOutput, updateOutputVariable } from './util/output';
 
 const outputTimeInterval: number = 1000 * 60 * 2.5; // 2.5 Minutes
 
@@ -62,6 +62,8 @@ export class BuildWorker {
         console.log(`Build "${this.buildConfiguration.buildName}" started ${this.getTeamProjectOutput(false, true)}- ${buildQueueResult.buildNumber}`);
         console.log(`      Link: ${buildQueueResult._links.web.href}`);
 
+        this.setBuildIdOutputVariable();
+
         // Set initial build link for async tasks
         if (this.environmentConfiguration.async === true) {
             this.cachedBuildResult = await this.buildApi.getBuild(this.buildId);
@@ -116,5 +118,13 @@ export class BuildWorker {
 
     private getTeamProjectOutput(prefixWhitespace: boolean, postfixWhitespace: boolean) {
         return getTeamProjectOutput(this.environmentConfiguration, this.buildConfiguration, prefixWhitespace, postfixWhitespace);
+    }
+
+    private setBuildIdOutputVariable() {
+        // GLobal configuration
+        updateOutputVariable(this.environmentConfiguration.buildIdOutputVariable, this.buildId);
+
+        // Build specific configuration
+        updateOutputVariable(this.buildConfiguration.buildIdOutputVariable, this.buildId);
     }
 }

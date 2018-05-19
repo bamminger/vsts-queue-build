@@ -8,5 +8,6 @@ export interface IEnvironmentConfiguration {
     accessToken: string;
     requestedFor: string;
     async: boolean;
+    buildIdOutputVariable: string | null;
     teamProjectType: TeamProjectType;
 }

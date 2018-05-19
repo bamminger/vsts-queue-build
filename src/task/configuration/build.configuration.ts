@@ -6,6 +6,7 @@ export class BuildConfiguration implements IBuildConfiguration {
     buildName: string;
     configuration: Build;
     buildDefinitionId: number | null;
+    buildIdOutputVariable: string | null;
 
     constructor(
         public originalBuildName: string,

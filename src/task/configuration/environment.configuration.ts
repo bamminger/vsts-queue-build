@@ -179,6 +179,11 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
                     delete buildConfig.configuration['teamProject'];
                 }
 
+                if (Object.getOwnPropertyNames(buildConfig.configuration).indexOf('buildIdOutputVariable') > -1) {
+                    buildConfig.buildIdOutputVariable = buildConfig.configuration['buildIdOutputVariable'];
+                    delete buildConfig.configuration['buildIdOutputVariable'];
+                }
+
                 if (buildConfig.teamProject == null || buildConfig.teamProject.trim() === '') {
                     throw new Error("Missing team project configuration. Team project type: " + this.teamProjectType
                         + ", Build name: " + buildConfig.originalBuildName
