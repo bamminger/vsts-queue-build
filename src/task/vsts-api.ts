@@ -1,5 +1,4 @@
 import { WebApi, getPersonalAccessTokenHandler } from 'vso-node-api/WebApi';
-import { IBuildApi } from 'vso-node-api/BuildApi';
 import { IEnvironmentConfiguration } from './configuration';
 import { BuildApi } from './build-api';
 
@@ -14,9 +13,9 @@ export class VstsApi {
     * @param teamFoundationUri Team Foundation server uri
     * @param accessToken OAuth token
     */
-    public getBuildApi(): BuildApi {
+    public async getBuildApi(): Promise<BuildApi> {
         let connection = this.createConnection(this.configuration.teamFoundationUri, this.configuration.accessToken);
-        return new BuildApi(connection.getBuildApi());
+        return new BuildApi(await connection.getBuildApi());
     }
 
     private createConnection(teamFoundationUri: string, accessToken: string): WebApi {

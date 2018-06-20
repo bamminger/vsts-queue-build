@@ -9,7 +9,7 @@
     },
     "devDependencies": {},
     "dependencies": {
-        "vsts-task-lib": "2.0.5",
-        "vso-node-api": "5.1.2"
+        "vsts-task-lib": "2.5.0",
+        "vso-node-api": "6.5.0"
     }
 }

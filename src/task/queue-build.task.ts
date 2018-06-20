@@ -1,5 +1,4 @@
 import { TaskResult, setResult } from 'vsts-task-lib/task';
-import { WebApi } from 'vso-node-api/WebApi';
 import { BuildWorker } from './queue-build.worker';
 import { VstsApi } from './vsts-api';
 import { EnvironmentConfiguration } from './configuration';
@@ -19,7 +18,7 @@ async function run() {
 
         // Get Vsts Build Api
         let api = new VstsApi(configuration);
-        let buildApi = api.getBuildApi();
+        let buildApi = await api.getBuildApi();
 
         // Start builds
         let buildConfigurations = await configuration.getBuildConfigurations(buildApi);

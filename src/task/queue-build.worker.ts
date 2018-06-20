@@ -1,7 +1,6 @@
 import { Build, BuildStatus, BuildResult, DefinitionReference } from 'vso-node-api/interfaces/BuildInterfaces';
 import { IEnvironmentConfiguration, IBuildConfiguration } from './configuration';
 import { BuildApi } from './build-api';
-import { TeamProjectType } from './enum/team-project-type.enum';
 import { getTeamProjectOutput, updateOutputVariable } from './util/output';
 
 const outputTimeInterval: number = 1000 * 60 * 2.5; // 2.5 Minutes
