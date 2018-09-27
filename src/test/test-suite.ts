@@ -33,7 +33,7 @@ describe('Single queue build tests', function () {
         let tr: MockTestRunner = new MockTestRunner(tp);
 
         tr.run();
-        assert(tr.failed, 'should have failed');
+        assert(tr.failed, 'should have failed'+ tr.stdout);
         assert(tr.stderr.indexOf('Build definition "\\fail" not found') >= 0, "build definition should be invalid");
 
         done();
@@ -48,7 +48,7 @@ describe('Single queue build tests', function () {
         let tr: MockTestRunner = new MockTestRunner(tp);
 
         tr.run();
-        assert(tr.succeeded, 'should have succeeded');
+        assert(tr.succeeded, 'should have succeeded'+ tr.stdout);
         assert(tr.stdout.indexOf(`Build "${process.env['queue_build_definition']}" started`) >= 0, "build definition should be valid");
 
         done();
@@ -110,7 +110,7 @@ describe('Queue multiple builds tests', function () {
         let tr: MockTestRunner = new MockTestRunner(tp);
 
         tr.run();
-        assert(tr.failed, 'should have failed');
+        assert(tr.failed, 'should have failed'+ tr.stdout);
         assert(tr.stderr.indexOf('Build definition "\\fail" not found') >= 0, "build definition should be invalid");
         assert(tr.stderr.indexOf('Build definition "\\fail2" not found') >= 0, "build should not abort after first error");
 
@@ -437,6 +437,25 @@ Build 01
 
         tr.run();
         assert(tr.succeeded, 'should have succeeded');
+
+        done();
+    });
+
+    it('valid with folder wildcard', (done: MochaDone) => {
+
+        process.env['queue_build_definition'] = `
+\\sub\\**
+`;
+
+        let tp = path.join(__dirname, 'runner.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'should have succeeded');
+        assert(tr.stdout.indexOf(`Build "1" started`) >= 0, "build definition for build1 should be valid");
+        assert(tr.stdout.indexOf(`Build "2" started`) >= 0, "build definition for build2-wildcard should be valid");
+        assert(tr.stdout.indexOf(`Build "3" started`) >= 0, "build definition for build3-wildcard should be valid");
+
 
         done();
     });

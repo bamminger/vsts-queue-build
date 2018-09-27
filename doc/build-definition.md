@@ -19,5 +19,5 @@ Comments are defined by starting a line with #.
 ![Comments configuration](images/config_build_definition_06.png "Comments configuration")
 
 * Wildcards  
-Wildcards end with an asterisk (*), to start all definitions within the specified folder.  
+Wildcards end with an asterisk (*), to start all definitions within the specified folder. It's also possible to use the ** syntax for all builds and folders underneath the specified path.
 ![Wildcard configuration](images/config_build_definition_07.png "Wildcard configuration")

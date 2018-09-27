@@ -221,7 +221,7 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
             if (buildConfiguration.buildName.endsWith('*')) {
                 let filteredDefinitions: BuildDefinitionReference[];
 
-                if (buildConfiguration.buildName.endsWith('**')) {
+                if (buildConfiguration.buildName == '**') {
                     filteredDefinitions = buildDefinitions.filter(b => b.path.startsWith(buildConfiguration.path));
                 } else {
                     filteredDefinitions = buildDefinitions.filter(b => b.path == buildConfiguration.path);
