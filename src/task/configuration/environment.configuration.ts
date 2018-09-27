@@ -1,4 +1,5 @@
 import { getInput, getVariable, getDelimitedInput, getEndpointAuthorization, getBoolInput } from 'vsts-task-lib/task';
+import { BuildDefinitionReference } from 'vso-node-api/interfaces/BuildInterfaces';
 import { BuildApi } from '../build-api';
 import { IBuildConfiguration, IEnvironmentConfiguration } from './interface';
 import { TeamProjectType } from '../enum/team-project-type.enum';
@@ -218,7 +219,13 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
 
             // Find wild card build definitions
             if (buildConfiguration.buildName.endsWith('*')) {
-                let filteredDefinitions = buildDefinitions.filter(b => b.path == buildConfiguration.path);
+                let filteredDefinitions: BuildDefinitionReference[];
+
+                if (buildConfiguration.buildName.endsWith('**')) {
+                    filteredDefinitions = buildDefinitions.filter(b => b.path.startsWith(buildConfiguration.path));
+                } else {
+                    filteredDefinitions = buildDefinitions.filter(b => b.path == buildConfiguration.path);
+                }
 
                 for (let k = 0; k < filteredDefinitions.length; k++) {
                     let definition = filteredDefinitions[k];
