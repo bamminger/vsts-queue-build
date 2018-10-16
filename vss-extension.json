@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "queue-build",
-    "version": "1.7.0",
+    "version": "2.0.0",
     "name": "Queue Build(s) Task",
     "description": "A build/release task that queues new build(s).",
     "publisher": "jb",
@@ -28,25 +28,12 @@
         "id": "Microsoft.VisualStudio.Services"
     }],
     "files": [{
-            "path": "src/task",
-            "addressable": true
-        },
-        {
-            "path": "src/task.json",
-            "addressable": true
-        },
-        {
-            "path": "src/node_modules",
+            "path": "src",
             "addressable": true
         },
         {
             "path": "doc",
             "addressable": true
-        },
-        {
-            "path": "images/icon_32.png",
-            "addressable": true,
-            "packagePath": "src/icon.png"
         }
     ],
     "content": {
