@@ -456,7 +456,22 @@ Build 01
         assert(tr.stdout.indexOf(`Build "2" started`) >= 0, "build definition for build2-wildcard should be valid");
         assert(tr.stdout.indexOf(`Build "3" started`) >= 0, "build definition for build3-wildcard should be valid");
 
+        done();
+    });    
+    
+    it('valid with folder wildcard', (done: MochaDone) => {
 
+        process.env['queue_build_definition'] = `
+\\sub\\**\\3
+`;
+
+        let tp = path.join(__dirname, 'runner.js');
+        let tr: MockTestRunner = new MockTestRunner(tp);
+
+        tr.run();
+        assert(tr.succeeded, 'should have succeeded'+tr.stdout);
+        assert(tr.stdout.indexOf(`Build "2" started`) == -1, "build definition for build2-wildcard should not be found!");
+        assert(tr.stdout.indexOf(`Build "3" started`) >= 0, "build definition for build3-wildcard should be valid");
         done();
     });
 

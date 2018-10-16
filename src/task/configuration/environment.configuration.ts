@@ -218,21 +218,28 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
             }
 
             // Find wild card build definitions
+            let filteredDefinitions: BuildDefinitionReference[] = null;
             if (buildConfiguration.buildName.endsWith('*')) {
-                let filteredDefinitions: BuildDefinitionReference[];
-
                 if (buildConfiguration.buildName == '**') {
                     filteredDefinitions = buildDefinitions.filter(b => b.path.startsWith(buildConfiguration.path));
+                } else if (buildConfiguration.path.endsWith('**')) {
+                    const lookupPath = buildConfiguration.path.replace('**', '');
+                    filteredDefinitions = buildDefinitions.filter(b => b.path.startsWith(lookupPath));
                 } else {
                     filteredDefinitions = buildDefinitions.filter(b => b.path == buildConfiguration.path);
                 }
-
+            } else if (buildConfiguration.path.endsWith('**')) {
+                const lookupPath = buildConfiguration.path.replace('**', '');
+                filteredDefinitions = buildDefinitions.filter(b => b.name === buildConfiguration.buildName && b.path.startsWith(lookupPath));
+            }
+            if (filteredDefinitions != null) {
                 for (let k = 0; k < filteredDefinitions.length; k++) {
                     let definition = filteredDefinitions[k];
 
                     // Clone configuration for each build
-                    let config = JSON.parse(JSON.stringify(buildConfiguration));
+                    let config: IBuildConfiguration = JSON.parse(JSON.stringify(buildConfiguration));
                     config.buildName = definition.name;
+                    config.path = definition.path;
                     config.buildDefinitionId = definition.id;
                     result.push(config);
 
