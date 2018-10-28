@@ -73,6 +73,13 @@ Define a variable name for the result build ids and enable debug mode for Troubl
 ![Advanced configuration](doc/images/config_advanced.png "Advanced configuration")
 
 
+# API and TFS Mapping
+
+To support newer and older versions of TFS, the task has two different versions:
+* v1 - Support for TFS >= 2017 Update 1
+* v2 - Support for TFS >= 2018 Update 2 & Azure DevOps
+
+
 # Further information
 
 If you need some special kind of setting or a new feature for this extension, don't hesitate to create a github issue or leave a comment at the vsts extension page.

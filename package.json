@@ -1,10 +1,10 @@
 {
   "name": "vsts-queue-build-task",
-  "version": "1.7.0",
+  "version": "2.0.0",
   "description": "",
   "scripts": {
-    "install": "cd src && npm install",
-    "build": "tsc -p ./src",
+    "install": "cd src/v1 && npm install && cd .. && cd v2 && npm install",
+    "build": "tsc -p ./src/v1 && tsc -p ./src/v2",
     "postbuild": "npm run package",
     "package": "tfx extension create --manifest-globs vss-extension.json",
     "test": "tsc -p ./src && mocha src/test/test-suite.js"
@@ -14,14 +14,10 @@
     "url": "https://github.com/bamminger/vsts-queue-build"
   },
   "devDependencies": {
-    "@types/node": "10.3.4",
-    "@types/mocha": "5.2.2",
+    "@types/mocha": "5.2.5",
+    "@types/node": "^8.0.0",
     "mocha": "5.2.0",
-    "tfx-cli": "0.5.10",
-    "typescript": "^2.9.2"
-  },
-  "dependencies": {
-    "vsts-task-lib": "2.5.0",
-    "vso-node-api": "6.5.0"
+    "tfx-cli": "0.6.3",
+    "typescript": "3.1.3"
   }
 }
