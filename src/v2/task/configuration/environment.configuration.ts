@@ -9,7 +9,7 @@ import { getTeamProjectOutput } from '../util/output';
 
 export class EnvironmentConfiguration implements IEnvironmentConfiguration {
     public teamFoundationUri: string;
-    public workDirectory: string;
+    public workDirectory: string | null;
 
     public debug: boolean;
     public accessToken: string;
@@ -132,6 +132,11 @@ export class EnvironmentConfiguration implements IEnvironmentConfiguration {
      * Get build/release specific work directory
      */
     private getWorkDirectory() {
+        let writeBuildSummary = getBoolInput("writeBuildSummary", true);
+        if(!writeBuildSummary) {
+            return null;
+        }
+
         let taskWorkDirectory = getVariable("Agent.BuildDirectory");
         if (taskWorkDirectory == null) {
             taskWorkDirectory = getVariable("Agent.ReleaseDirectory");

@@ -109,6 +109,15 @@
             "groupName": "advanced"
         },
         {
+            "name": "writeBuildSummary",
+            "type": "boolean",
+            "label": "Write build summary",
+            "defaultValue": true,
+            "required": true,
+            "helpMarkDown": "Enable build summary. Information about the queued builds will be shown at the build summary page.",
+            "groupName": "advanced"
+        },
+        {
             "name": "debug",
             "type": "boolean",
             "label": "Debug",
