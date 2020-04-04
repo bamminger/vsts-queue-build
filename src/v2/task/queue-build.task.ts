@@ -3,13 +3,9 @@ import { BuildWorker } from './queue-build.worker';
 import { VstsApi } from './vsts-api';
 import { EnvironmentConfiguration } from './configuration';
 import { TaskSummary } from './util/task-summary';
-
-function sleep(ms): Promise<{}> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+import { sleep } from './util/runtime';
 
 async function run() {
-
     let builds = new Array<BuildWorker>();
     let configuration: EnvironmentConfiguration;
     try {
@@ -38,7 +34,7 @@ async function run() {
         // Poll build result
         let hasUnfinishedTasks;
         do {
-            await sleep(2000);
+            await sleep(5);
             hasUnfinishedTasks = false;
             for (let i = 0; i < builds.length; i++) {
                 if (!(await builds[i].getCompletedStatus())) {

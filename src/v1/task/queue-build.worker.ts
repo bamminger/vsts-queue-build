@@ -2,8 +2,10 @@ import { Build, BuildStatus, BuildResult, DefinitionReference } from 'vso-node-a
 import { IEnvironmentConfiguration, IBuildConfiguration } from './configuration';
 import { BuildApi } from './build-api';
 import { getTeamProjectOutput, updateOutputVariable } from './util/output';
+import { sleep } from './util/runtime';
 
 const outputTimeInterval: number = 1000 * 60 * 2.5; // 2.5 Minutes
+const requestFailureRetryCount: number = 3;
 
 export class BuildWorker {
 
@@ -78,7 +80,16 @@ export class BuildWorker {
         }
 
         // Check build status
-        this.cachedBuildResult = await this.buildApi.getBuild(this.buildId);
+        for (let i = 1; i <= requestFailureRetryCount; i++) {
+            try {
+                this.cachedBuildResult = await this.buildApi.getBuild(this.buildId);
+                break;
+            }
+            catch (error) {
+                console.warn(`Request to check status of build "${this.buildConfiguration.buildName}" failed. Attempt: ${i}`);
+                await sleep(3 * i);
+            }
+        }
 
         if (this.cachedBuildResult.status === BuildStatus.Completed) {
             console.log(`Build "${this.buildConfiguration.buildName}" completed ${this.getTeamProjectOutput(false, true)}- ${this.cachedBuildResult.buildNumber}`);

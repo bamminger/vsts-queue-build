@@ -3,10 +3,7 @@ import { BuildWorker } from './queue-build.worker';
 import { VstsApi } from './vsts-api';
 import { EnvironmentConfiguration } from './configuration';
 import { TaskSummary } from './util/task-summary';
-
-function sleep(ms): Promise<{}> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+import { sleep } from './util/runtime';
 
 async function run() {
 
