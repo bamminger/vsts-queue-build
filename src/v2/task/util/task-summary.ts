@@ -48,11 +48,11 @@ export abstract class TaskSummary {
                     summary += `<span ${baseIconDefinition} icon-tfs-build-status-inprogress" aria-label="started" title="Started"></span>\n`;
                 }
                 else {
-                    if (builds[i].isSucceeded() === true) {
-                        summary += `<span ${baseIconDefinition} icon-tfs-build-status-succeeded" aria-label="succeeded" title="Succeeded"></span>\n`;
-                    }
-                    else if (builds[i].isPartiallySucceeded() === true) {
+                    if (builds[i].isPartiallySucceeded() === true) {
                         summary += `<span ${baseIconDefinition} icon-tfs-build-status-partiallysucceeded" aria-label="succeeded" title="Partially succeeded"></span>\n`;
+                    }
+                    else if (builds[i].isSucceeded() === true) {
+                        summary += `<span ${baseIconDefinition} icon-tfs-build-status-succeeded" aria-label="succeeded" title="Succeeded"></span>\n`;
                     }
                     else {
                         summary += `<span ${baseIconDefinition} icon-tfs-build-status-failed" aria-label="failed" title="Failed"></span>\n`;

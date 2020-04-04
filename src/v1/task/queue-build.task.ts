@@ -35,7 +35,7 @@ async function run() {
         // Poll build result
         let hasUnfinishedTasks;
         do {
-            await sleep(2000);
+            await sleep(5);
             hasUnfinishedTasks = false;
             for (let i = 0; i < builds.length; i++) {
                 if (!(await builds[i].getCompletedStatus())) {

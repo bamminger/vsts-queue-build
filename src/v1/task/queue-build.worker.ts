@@ -87,7 +87,11 @@ export class BuildWorker {
             }
             catch (error) {
                 console.warn(`Request to check status of build "${this.buildConfiguration.buildName}" failed. Attempt: ${i}`);
-                await sleep(3 * i);
+                if (i < requestFailureRetryCount) {
+                    await sleep(2 * i);
+                } else {
+                    throw error;
+                }
             }
         }
 

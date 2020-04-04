@@ -87,7 +87,11 @@ export class BuildWorker {
             }
             catch (error) {
                 console.warn(`Request to check status of build "${this.buildConfiguration.buildName}" failed. Attempt: ${i}`);
-                await sleep(3 * i);
+                if (i < requestFailureRetryCount) {
+                    await sleep(2 * i);
+                } else {
+                    throw error;
+                }
             }
         }
 
@@ -118,7 +122,7 @@ export class BuildWorker {
     public isSucceeded(): boolean {
         if (this.cachedStatus === true
             && this.cachedBuildResult != null
-            && this.cachedBuildResult.result == BuildResult.Succeeded
+            && (this.cachedBuildResult.result == BuildResult.Succeeded || this.cachedBuildResult.result == BuildResult.PartiallySucceeded)
         ) {
             return true;
         }

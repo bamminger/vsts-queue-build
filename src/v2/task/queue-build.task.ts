@@ -48,7 +48,7 @@ async function run() {
 
         // Check build status
         for (let i = 0; i < builds.length; i++) {
-            if (builds[i].getSuccessStatus() === false) {
+            if (builds[i].isSucceeded() === false) {
                 // At least one build failed
                 setResult(TaskResult.Failed, `Queue build(s) failed`);
                 return;

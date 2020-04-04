@@ -7,7 +7,7 @@
     "build": "tsc -p ./src/v1 && tsc -p ./src/v2",
     "postbuild": "yarn package",
     "package": "tfx extension create --manifest-globs vss-extension.json",
-    "test": "tsc -p ./src && mocha src/test/test-suite.js"
+    "test": "tsc -p ./src/v2 && mocha src/v2/test/test-suite.js"
   },
   "repository": {
     "type": "git",
