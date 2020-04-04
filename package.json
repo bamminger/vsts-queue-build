@@ -3,9 +3,9 @@
   "version": "2.0.0",
   "description": "",
   "scripts": {
-    "install": "cd src/v1 && npm install && cd .. && cd v2 && npm install",
+    "install": "cd src/v1 && yarn && cd .. && cd v2 && yarn",
     "build": "tsc -p ./src/v1 && tsc -p ./src/v2",
-    "postbuild": "npm run package",
+    "postbuild": "yarn package",
     "package": "tfx extension create --manifest-globs vss-extension.json",
     "test": "tsc -p ./src && mocha src/test/test-suite.js"
   },
