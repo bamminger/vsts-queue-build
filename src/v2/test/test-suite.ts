@@ -14,6 +14,7 @@ function initializeEnvironment(): void {
     process.env['queue_build_configuration'] = '';
     process.env['queue_build_team_project_type'] = 'current';
     process.env['queue_build_buildid_output_variable'] = '';
+    process.env['queue_build_write_build_summary'] = 'true';
 }
 
 
