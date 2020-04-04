@@ -68,7 +68,7 @@ Detailed documentation on Github: [Authentication](https://github.com/bamminger/
 ---
  
 **Advanced**  
-Define a variable name for the result build ids and enable debug mode for Troubleshooting. Additional information about your build definitions and the processed input will be provided.  
+Define a variable name for the result build ids, disable build summary feature and enable debug mode for Troubleshooting. Additional information about your build definitions and the processed input will be provided.  
 
 ![Advanced configuration](doc/images/config_advanced.png "Advanced configuration")
 
