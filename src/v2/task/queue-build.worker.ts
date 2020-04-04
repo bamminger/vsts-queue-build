@@ -115,10 +115,21 @@ export class BuildWorker {
         return this.buildConfiguration.originalBuildName;
     }
 
-    public getSuccessStatus(): boolean {
+    public isSucceeded(): boolean {
         if (this.cachedStatus === true
             && this.cachedBuildResult != null
-            && (this.cachedBuildResult.result == BuildResult.Succeeded || this.cachedBuildResult.result == BuildResult.PartiallySucceeded)
+            && this.cachedBuildResult.result == BuildResult.Succeeded
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public isPartiallySucceeded(): boolean {
+        if (this.cachedStatus === true
+            && this.cachedBuildResult != null
+            && this.cachedBuildResult.result == BuildResult.PartiallySucceeded
         ) {
             return true;
         }

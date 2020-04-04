@@ -30,7 +30,7 @@ export abstract class TaskSummary {
         environmentConfiguration: IEnvironmentConfiguration
     ): string {
         let summary = '';
-        let baseIconDefinition = `style="vertical-align:top" class="icon bowtie-icon`;
+        let baseIconDefinition = `style="vertical-align:top" class="icon`;
 
         for (let i = 0; i < builds.length; i++) {
             summary += `<div style="padding: 3px 0">\n`;
@@ -45,14 +45,17 @@ export abstract class TaskSummary {
             // Valid build
             else {
                 if (environmentConfiguration != null && environmentConfiguration.async === true) {
-                    summary += `<span ${baseIconDefinition} build-brand-icon-color bowtie-play-fill" aria-label="started" title="Started"></span>\n`;
+                    summary += `<span ${baseIconDefinition} icon-tfs-build-status-inprogress" aria-label="started" title="Started"></span>\n`;
                 }
                 else {
-                    if (builds[i].getSuccessStatus() === true) {
-                        summary += `<span ${baseIconDefinition} build-success-icon-color bowtie-check" aria-label="succeeded" title="Succeeded"></span>\n`;
+                    if (builds[i].isSucceeded() === true) {
+                        summary += `<span ${baseIconDefinition} icon-tfs-build-status-succeeded" aria-label="succeeded" title="Succeeded"></span>\n`;
+                    }
+                    else if (builds[i].isPartiallySucceeded() === true) {
+                        summary += `<span ${baseIconDefinition} icon-tfs-build-status-partiallysucceeded" aria-label="succeeded" title="Partially succeeded"></span>\n`;
                     }
                     else {
-                        summary += `<span ${baseIconDefinition} build-failure-icon-color bowtie-edit-delete" aria-label="failed" title="Failed"></span>\n`;
+                        summary += `<span ${baseIconDefinition} icon-tfs-build-status-failed" aria-label="failed" title="Failed"></span>\n`;
                     }
                 }
 
